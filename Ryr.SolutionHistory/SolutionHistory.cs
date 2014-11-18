@@ -41,10 +41,11 @@ namespace Ryr.SolutionHistory
                             <attribute name=""completedon"" />
                             <attribute name=""createdby"" />
                             <attribute name=""data"" />
+                            <attribute name=""progress"" />
                             <order attribute=""startedon"" descending=""true"" />
                             <filter type=""and"">
                               <condition attribute=""name"" operator=""eq"" value=""Customizations"" />
-                              <condition attribute=""progress"" operator=""eq"" value=""100"" />
+                              <condition attribute=""completedon"" operator=""not-null"" />
                             </filter>
                           </entity>
                         </fetch>";
@@ -64,13 +65,14 @@ namespace Ryr.SolutionHistory
                         var parsedComponentXml = XElement.Parse(importJob.GetAttributeValue<string>("data"));
                         var solutionManifest = parsedComponentXml.Elements("solutionManifests").Elements("solutionManifest");
                         var upgradeInformation = parsedComponentXml.Elements("upgradeSolutionPackageInformation");
-                        listItem.SubItems.Add(solutionManifest.Elements("Managed").First().Value == "0"
+                        listItem.SubItems.Add((solutionManifest.Elements("Managed").Select(cv => cv.Value).FirstOrDefault() ?? string.Empty) == "0"
                             ? "Unmanaged"
                             : "Managed");
                         listItem.SubItems.Add(importJob.GetAttributeValue<EntityReference>("createdby").Name);
-                        listItem.SubItems.Add(upgradeInformation.Elements("currentVersion").First().Value);
-                        listItem.SubItems.Add(upgradeInformation.Elements("fileVersion").First().Value);
-                        listItem.SubItems.Add(solutionManifest.Elements("Publisher").Elements("UniqueName").First().Value);
+                        listItem.SubItems.Add(upgradeInformation.Elements("currentVersion").Select(cv => cv.Value).FirstOrDefault() ?? string.Empty);
+                        listItem.SubItems.Add(upgradeInformation.Elements("fileVersion").Select(fv => fv.Value).FirstOrDefault() ?? string.Empty);
+                        listItem.SubItems.Add(solutionManifest.Elements("Publisher").Elements("UniqueName").Select(un => un.Value).FirstOrDefault() ?? string.Empty);
+                        listItem.SubItems.Add(importJob.GetAttributeValue<double>("progress").ToString());
                         listItem.SubItems.Add(importJob.GetAttributeValue<Guid>("importjobid").ToString());
                         ListViewDelegates.AddItem(lvSolutionImports, listItem);
                     }
@@ -207,7 +209,7 @@ namespace Ryr.SolutionHistory
         {
             if (lvSolutionImports.SelectedItems.Count > 0)
             {
-                var importJobId = new Guid(lvSolutionImports.SelectedItems[0].SubItems[7].Text);
+                var importJobId = new Guid(lvSolutionImports.SelectedItems[0].SubItems[8].Text);
                 WorkAsync("Export Solution Import Log..", ExecuteExportLogRequest, ProcessExportLogResponse, importJobId);
             }
         }
