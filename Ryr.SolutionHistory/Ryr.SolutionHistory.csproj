@@ -116,6 +116,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\.gitignore" />
     <Content Include="bin\coretools\CrmSvcUtil.exe" />
     <Content Include="bin\coretools\CrmSvcUtil.xml" />
     <Content Include="bin\coretools\Microsoft.Xrm.Sdk.dll" />
@@ -137,6 +138,7 @@
     <Content Include="bin\Debug\XrmToolBox.pdb" />
     <Content Include="bin\Debug\XrmToolBox.Settings.xml" />
     <Content Include="bin\Debug\XrmToolBox\XrmToolBox.exe" />
+    <Content Include="obj\.gitignore" />
     <Content Include="XrmToolBox\McTools.Xrm.Connection.dll" />
     <Content Include="XrmToolBox\McTools.Xrm.Connection.WinForms.dll" />
     <Content Include="XrmToolBox\XrmToolBox.exe">
