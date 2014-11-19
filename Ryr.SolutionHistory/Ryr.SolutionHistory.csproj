@@ -116,29 +116,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\.gitignore" />
-    <Content Include="bin\coretools\CrmSvcUtil.exe" />
-    <Content Include="bin\coretools\CrmSvcUtil.xml" />
-    <Content Include="bin\coretools\Microsoft.Xrm.Sdk.dll" />
-    <Content Include="bin\coretools\SolutionPackager.exe" />
-    <Content Include="bin\Debug\ActivityFeedsCore-20140911.xml" />
-    <Content Include="bin\Debug\ActivityFeedsCore-20141019.xml" />
-    <Content Include="bin\Debug\c6f607b6-0142-4c48-8eb2-bdbaecdc0302-ActivityFeedsCore.xml" />
-    <Content Include="bin\Debug\McTools.Xrm.Connection.dll" />
-    <Content Include="bin\Debug\McTools.Xrm.Connection.pdb" />
-    <Content Include="bin\Debug\McTools.Xrm.Connection.WinForms.dll" />
-    <Content Include="bin\Debug\McTools.Xrm.Connection.WinForms.pdb" />
-    <Content Include="bin\Debug\Microsoft.Crm.Sdk.Proxy.dll" />
-    <Content Include="bin\Debug\Microsoft.Xrm.Client.dll" />
-    <Content Include="bin\Debug\Microsoft.Xrm.Sdk.Deployment.dll" />
-    <Content Include="bin\Debug\Microsoft.Xrm.Sdk.dll" />
-    <Content Include="bin\Debug\Ryr.SolutionHistory.dll" />
-    <Content Include="bin\Debug\Ryr.SolutionHistory.pdb" />
-    <Content Include="bin\Debug\XrmToolBox.exe" />
-    <Content Include="bin\Debug\XrmToolBox.pdb" />
-    <Content Include="bin\Debug\XrmToolBox.Settings.xml" />
-    <Content Include="bin\Debug\XrmToolBox\XrmToolBox.exe" />
-    <Content Include="obj\.gitignore" />
     <Content Include="XrmToolBox\McTools.Xrm.Connection.dll" />
     <Content Include="XrmToolBox\McTools.Xrm.Connection.WinForms.dll" />
     <Content Include="XrmToolBox\XrmToolBox.exe">
@@ -146,12 +123,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="bin\Debug\mscrmtools2011.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="bin\Release\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
