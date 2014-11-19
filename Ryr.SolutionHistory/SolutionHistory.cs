@@ -137,7 +137,7 @@ namespace Ryr.SolutionHistory
                 new Tuple<string, string, string,IEnumerable<XElement>>("Workflows", "workflows", "workflow",parsedSolutionXml.Elements("workflows").Elements("workflow")),
                 new Tuple<string, string, string,IEnumerable<XElement>>("Templates", "templates", "template",parsedSolutionXml.Elements("templates").Elements("template")),
                 new Tuple<string, string, string,IEnumerable<XElement>>("Optionsets", "optionSets", "optionSet",parsedSolutionXml.Elements("optionSets").Elements("optionSet")),
-                new Tuple<string, string, string,IEnumerable<XElement>>("Plugin Assemblies", "SolutionPluginAssemblies", "SolutionPluginAssembly",parsedSolutionXml.Elements("SolutionPluginAssemblies").Elements("SolutionPluginAssembly")),
+                new Tuple<string, string, string,IEnumerable<XElement>>("Plugin Assemblies", "SolutionPluginAssemblies", "SolutionPluginAssembly",parsedSolutionXml.Elements("SolutionPluginAssemblies").Elements("PluginAssembly")),
                 new Tuple<string, string, string,IEnumerable<XElement>>("Plugin Assembly Steps", "SdkMessageProcessingSteps", "SdkMessageProcessingStep",parsedSolutionXml.Elements("SdkMessageProcessingSteps").Elements("SdkMessageProcessingStep"))
             };
             args.Result = itemsToTrack;
