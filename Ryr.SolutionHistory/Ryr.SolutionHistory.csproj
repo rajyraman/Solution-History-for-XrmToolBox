@@ -152,6 +152,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="LICENCE.txt" />
     <Content Include="XrmToolBox\McTools.Xrm.Connection.dll" />
     <Content Include="XrmToolBox\McTools.Xrm.Connection.WinForms.dll" />
     <Content Include="XrmToolBox\XrmToolBox.exe">
