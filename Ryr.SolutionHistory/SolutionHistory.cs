@@ -210,7 +210,7 @@ namespace Ryr.SolutionHistory
             if (lvSolutionImports.SelectedItems.Count > 0)
             {
                 var importJobId = new Guid(lvSolutionImports.SelectedItems[0].SubItems[8].Text);
-                WorkAsync("Export Solution Import Log..", ExecuteExportLogRequest, ProcessExportLogResponse, importJobId);
+                WorkAsync("Save Solution Import Log..", ExecuteExportLogRequest, ProcessExportLogResponse, importJobId);
             }
         }
 
