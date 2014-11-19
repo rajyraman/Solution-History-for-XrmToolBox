@@ -87,7 +87,7 @@
             // 
             // tsMain
             // 
-            this.tsMain.AutoSize = false;
+            this.tsMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tsMain.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.tsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbCloseThisTab,
@@ -98,7 +98,7 @@
             this.toolStripSeparator3});
             this.tsMain.Location = new System.Drawing.Point(3, 0);
             this.tsMain.Name = "tsMain";
-            this.tsMain.Size = new System.Drawing.Size(1215, 25);
+            this.tsMain.Size = new System.Drawing.Size(354, 25);
             this.tsMain.TabIndex = 86;
             this.tsMain.Text = "toolStrip1";
             // 
@@ -383,6 +383,7 @@
             this.tsMain.PerformLayout();
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);
             this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
+            this.toolStripContainer1.TopToolStripPanel.PerformLayout();
             this.toolStripContainer1.ResumeLayout(false);
             this.toolStripContainer1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
