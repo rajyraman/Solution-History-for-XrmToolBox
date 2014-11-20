@@ -110,6 +110,9 @@
   <ItemGroup>
     <Compile Include="DelegatesHelper\CommonDelegates.cs" />
     <Compile Include="DelegatesHelper\ListViewDelegates.cs" />
+    <Compile Include="Controls\DoubleBufferedListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Forms\ErrorsAndWarningsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
