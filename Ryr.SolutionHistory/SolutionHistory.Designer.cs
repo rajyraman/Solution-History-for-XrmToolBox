@@ -60,6 +60,7 @@
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader14 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tsMain.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -87,7 +88,7 @@
             // 
             // tsMain
             // 
-            this.tsMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tsMain.Dock = System.Windows.Forms.DockStyle.None;
             this.tsMain.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.tsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbCloseThisTab,
@@ -206,6 +207,7 @@
             this.lvSolutionImports.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2,
+            this.columnHeader14,
             this.columnHeader3,
             this.columnHeader9,
             this.columnHeader10,
@@ -371,6 +373,10 @@
             this.columnHeader7.Text = "Id";
             this.columnHeader7.Width = 206;
             // 
+            // columnHeader14
+            // 
+            this.columnHeader14.Text = "Version";
+            // 
             // SolutionHistory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -433,5 +439,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.ColumnHeader columnHeader7;
+        private System.Windows.Forms.ColumnHeader columnHeader14;
     }
 }

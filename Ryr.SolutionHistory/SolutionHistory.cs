@@ -61,18 +61,28 @@ namespace Ryr.SolutionHistory
                             Text = importJob.GetAttributeValue<DateTime>("startedon").ToString("dd-MMM-yyyy HH:mm"),
                             Tag = importJob.GetAttributeValue<string>("data")
                         };
-                        listItem.SubItems.Add(importJob.GetAttributeValue<string>("solutionname"));
+                        
                         var parsedComponentXml = XElement.Parse(importJob.GetAttributeValue<string>("data"));
-                        var solutionManifest = parsedComponentXml.Elements("solutionManifests").Elements("solutionManifest");
-                        var upgradeInformation = parsedComponentXml.Elements("upgradeSolutionPackageInformation");
+                        var solutionManifest = parsedComponentXml.Elements("solutionManifests").Elements("solutionManifest").ToList();
+                        var upgradeInformation = parsedComponentXml.Elements("upgradeSolutionPackageInformation").ToList();
+
+                        var name =
+                            solutionManifest.Elements("LocalizedNames")
+                                .Elements("LocalizedName")
+                                .Attributes("description")
+                                .Select(att => att.Value)
+                                .FirstOrDefault() ?? importJob.GetAttributeValue<string>("solutionname");
+
+                        listItem.SubItems.Add(name);
+                        listItem.SubItems.Add(solutionManifest.Elements("Version").Select(el => " " + el.Value).FirstOrDefault() ?? string.Empty);
                         listItem.SubItems.Add((solutionManifest.Elements("Managed").Select(cv => cv.Value).FirstOrDefault() ?? string.Empty) == "0"
                             ? "Unmanaged"
                             : "Managed");
                         listItem.SubItems.Add(importJob.GetAttributeValue<EntityReference>("createdby").Name);
                         listItem.SubItems.Add(upgradeInformation.Elements("currentVersion").Select(cv => cv.Value).FirstOrDefault() ?? string.Empty);
                         listItem.SubItems.Add(upgradeInformation.Elements("fileVersion").Select(fv => fv.Value).FirstOrDefault() ?? string.Empty);
-                        listItem.SubItems.Add(solutionManifest.Elements("Publisher").Elements("UniqueName").Select(un => un.Value).FirstOrDefault() ?? string.Empty);
-                        listItem.SubItems.Add(importJob.GetAttributeValue<double>("progress").ToString());
+                        listItem.SubItems.Add(solutionManifest.Elements("Publisher").Elements("LocalizedNames").Elements("LocalizedName").Attributes("description").Select(att => att.Value).FirstOrDefault() ?? solutionManifest.Elements("Publisher").Elements("UniqueName").Select(un => un.Value).FirstOrDefault() ?? string.Empty);
+                        listItem.SubItems.Add(importJob.GetAttributeValue<double>("progress").ToString("0.##"));
                         listItem.SubItems.Add(importJob.GetAttributeValue<Guid>("importjobid").ToString());
                         ListViewDelegates.AddItem(lvSolutionImports, listItem);
                     }
@@ -209,7 +219,7 @@ namespace Ryr.SolutionHistory
         {
             if (lvSolutionImports.SelectedItems.Count > 0)
             {
-                var importJobId = new Guid(lvSolutionImports.SelectedItems[0].SubItems[8].Text);
+                var importJobId = new Guid(lvSolutionImports.SelectedItems[0].SubItems[9].Text);
                 WorkAsync("Export Solution Import Log..", ExecuteExportLogRequest, ProcessExportLogResponse, importJobId);
             }
         }
