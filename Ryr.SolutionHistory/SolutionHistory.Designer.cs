@@ -250,13 +250,13 @@
             // 
             // columnHeader10
             // 
-            this.columnHeader10.Text = "Current Version";
-            this.columnHeader10.Width = 186;
+            this.columnHeader10.Text = "Current File Version";
+            this.columnHeader10.Width = 210;
             // 
             // columnHeader11
             // 
-            this.columnHeader11.Text = "Prev. Version";
-            this.columnHeader11.Width = 151;
+            this.columnHeader11.Text = "Prev. File Version";
+            this.columnHeader11.Width = 210;
             // 
             // columnHeader12
             // 
