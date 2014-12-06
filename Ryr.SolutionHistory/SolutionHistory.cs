@@ -32,13 +32,51 @@ namespace Ryr.SolutionHistory
             InitializeComponent();
         }
 
+        private void RetrieveCurrentSolutions()
+        {
+            fromDateTimePicker.Value = toDateTimePicker.Value.AddMonths(-3);
 
+            WorkAsync("Loading current solutions..",
+                (w, e) =>
+                {
+                    var solutionFetchXml = @"
+                    <fetch version=""1.0"" output-format=""xml-platform"" mapping=""logical"" distinct=""false"">
+                      <entity name=""solution"" >
+                        <attribute name=""friendlyname"" />
+                        <attribute name=""uniquename"" />
+                        <attribute name=""solutionid"" />
+                        <attribute name=""isvisible"" />
+                        <filter>
+                          <condition attribute=""isvisible"" operator=""eq"" value=""1"" />
+                        </filter>
+                      </entity>
+                    </fetch>";
+                    e.Result = Service.RetrieveMultiple(new FetchExpression(solutionFetchXml)).Entities;
+                },
+                e =>
+                {
+                    var solutions = (ICollection<Entity>) e.Result;
+                    foreach (var solution in solutions)
+                    {
+                        solutionsListBox.Items.Add(solution.GetAttributeValue<string>("uniquename"));
+                    }
+                    Enumerable.Range(0, solutions.Count)
+                        .ToList().ForEach(x => solutionsListBox.SetSelected(x, true));
+                    solutionsListBox.TopIndex = 0;
+                },
+                e =>{});
+        }
         private void RetrieveSolutionHistory()
         {
             WorkAsync("Loading solution history..", 
                 (w, e) =>
                 {
-                    var importJobsFetchXml =
+                    var solutionFilter = new StringBuilder();
+                    foreach (var s in solutionsListBox.SelectedItems)
+                    {
+                        solutionFilter.AppendFormat("<value>{0}</value>",s);
+                    }
+                    var importJobsFetchXml = string.Format(
                         @"<fetch version=""1.0"" output-format=""xml-platform"" mapping=""logical"" distinct=""false"">
                           <entity name=""importjob"">
                             <attribute name=""importjobid"" />
@@ -52,14 +90,21 @@ namespace Ryr.SolutionHistory
                             <filter type=""and"">
                               <condition attribute=""name"" operator=""eq"" value=""Customizations"" />
                               <condition attribute=""completedon"" operator=""not-null"" />
+                              <condition attribute=""solutionname"" operator=""in"" >{0}</condition>
+                              <condition attribute=""startedon"" operator=""on-or-after"" value=""{1}"" />
+                              <condition attribute=""completedon"" operator=""on-or-before"" value=""{2}"" />
                             </filter>
                           </entity>
-                        </fetch>";
+                        </fetch>", solutionFilter.ToString(), 
+                                 fromDateTimePicker.Value.ToString("s"),
+                                 toDateTimePicker.Value.ToString("s"));
                     e.Result = Service.RetrieveMultiple(new FetchExpression(importJobsFetchXml)).Entities;
                 },
                 e =>
                 {
                     ListViewDelegates.ClearItems(lvSolutionImports);
+                    ListViewDelegates.ClearItems(lvSolutionComponents);
+                    ListViewDelegates.ClearItems(lvSolutionComponentDetail);
                     foreach (var importJob in (ICollection<Entity>)e.Result)
                     {
                         var listItem = new ListViewItem
@@ -67,7 +112,7 @@ namespace Ryr.SolutionHistory
                             Text = importJob.GetAttributeValue<DateTime>("startedon").ToString("dd-MMM-yyyy HH:mm"),
                             Tag = importJob.GetAttributeValue<string>("data")
                         };
-                        
+                        listItem.SubItems.Add(importJob.GetAttributeValue<DateTime>("completedon").ToString("dd-MMM-yyyy HH:mm"));
                         var parsedComponentXml = XElement.Parse(importJob.GetAttributeValue<string>("data"));
                         var solutionManifest = parsedComponentXml.Elements("solutionManifests").Elements("solutionManifest").ToList();
                         var upgradeInformation = parsedComponentXml.Elements("upgradeSolutionPackageInformation").ToList();
@@ -273,6 +318,11 @@ namespace Ryr.SolutionHistory
             lvSolutionComponentDetail.SelectedItems.Clear();
             lvSolutionComponentDetail.Sorting = lvSolutionComponentDetail.Sorting == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
             lvSolutionComponentDetail.ListViewItemSorter = new ListViewItemComparer(e.Column, lvSolutionComponentDetail.Sorting);
+        }
+
+        private void SolutionHistory_Load(object sender, EventArgs e)
+        {
+            ExecuteMethod(RetrieveCurrentSolutions);
         }
     }
 }
