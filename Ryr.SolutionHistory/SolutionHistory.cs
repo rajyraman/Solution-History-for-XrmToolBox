@@ -35,11 +35,8 @@ namespace Ryr.SolutionHistory
         private void RetrieveCurrentSolutions()
         {
             fromDateTimePicker.Value = toDateTimePicker.Value.AddMonths(-3);
-
-            WorkAsync("Loading current solutions..",
-                (w, e) =>
-                {
-                    var solutionFetchXml = @"
+            solutionsListBox.Items.Clear();
+            var solutionFetchXml = @"
                     <fetch version=""1.0"" output-format=""xml-platform"" mapping=""logical"" distinct=""false"">
                       <entity name=""solution"" >
                         <attribute name=""friendlyname"" />
@@ -51,20 +48,14 @@ namespace Ryr.SolutionHistory
                         </filter>
                       </entity>
                     </fetch>";
-                    e.Result = Service.RetrieveMultiple(new FetchExpression(solutionFetchXml)).Entities;
-                },
-                e =>
-                {
-                    var solutions = (ICollection<Entity>) e.Result;
-                    foreach (var solution in solutions)
-                    {
-                        solutionsListBox.Items.Add(solution.GetAttributeValue<string>("uniquename"));
-                    }
-                    Enumerable.Range(0, solutions.Count)
-                        .ToList().ForEach(x => solutionsListBox.SetSelected(x, true));
-                    solutionsListBox.TopIndex = 0;
-                },
-                e =>{});
+            var solutions = Service.RetrieveMultiple(new FetchExpression(solutionFetchXml)).Entities;
+            foreach (var solution in solutions)
+            {
+                solutionsListBox.Items.Add(solution.GetAttributeValue<string>("uniquename"));
+            }
+            Enumerable.Range(0, solutions.Count)
+                .ToList().ForEach(x => solutionsListBox.SetSelected(x, true));
+            solutionsListBox.TopIndex = 0;
         }
         private void RetrieveSolutionHistory()
         {
@@ -321,6 +312,11 @@ namespace Ryr.SolutionHistory
         }
 
         private void SolutionHistory_Load(object sender, EventArgs e)
+        {
+            ExecuteMethod(RetrieveCurrentSolutions);
+        }
+
+        private void tsbRefreshSolutions_Click(object sender, EventArgs e)
         {
             ExecuteMethod(RetrieveCurrentSolutions);
         }

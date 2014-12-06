@@ -40,18 +40,19 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.solutionLabel = new System.Windows.Forms.Label();
+            this.solutionsListBox = new System.Windows.Forms.ListBox();
+            this.toDateTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.toLabel = new System.Windows.Forms.Label();
+            this.fromDateTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.fromLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.fromDateTimePicker = new System.Windows.Forms.DateTimePicker();
-            this.fromLabel = new System.Windows.Forms.Label();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.toLabel = new System.Windows.Forms.Label();
-            this.toDateTimePicker = new System.Windows.Forms.DateTimePicker();
-            this.solutionsListBox = new System.Windows.Forms.ListBox();
-            this.solutionLabel = new System.Windows.Forms.Label();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.tsbRefreshSolutions = new System.Windows.Forms.ToolStripButton();
             this.lvSolutionImports = new Ryr.SolutionHistory.Controls.DoubleBufferedListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader15 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -78,6 +79,11 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+            this.splitContainer3.Panel1.SuspendLayout();
+            this.splitContainer3.Panel2.SuspendLayout();
+            this.splitContainer3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
@@ -85,11 +91,6 @@
             this.splitContainer2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
-            this.splitContainer3.Panel1.SuspendLayout();
-            this.splitContainer3.Panel2.SuspendLayout();
-            this.splitContainer3.SuspendLayout();
             this.SuspendLayout();
             // 
             // imageList1
@@ -107,13 +108,14 @@
             this.tsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbCloseThisTab,
             this.toolStripSeparator2,
+            this.tsbRefreshSolutions,
             this.tsbSolutionHistory,
             this.toolStripSeparator1,
             this.tsbExportSolutionLog,
             this.toolStripSeparator3});
             this.tsMain.Location = new System.Drawing.Point(3, 0);
             this.tsMain.Name = "tsMain";
-            this.tsMain.Size = new System.Drawing.Size(622, 39);
+            this.tsMain.Size = new System.Drawing.Size(905, 39);
             this.tsMain.TabIndex = 86;
             this.tsMain.Text = "toolStrip1";
             // 
@@ -207,6 +209,96 @@
             this.splitContainer1.SplitterWidth = 8;
             this.splitContainer1.TabIndex = 4;
             // 
+            // splitContainer3
+            // 
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Name = "splitContainer3";
+            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.AutoScroll = true;
+            this.splitContainer3.Panel1.Controls.Add(this.groupBox4);
+            // 
+            // splitContainer3.Panel2
+            // 
+            this.splitContainer3.Panel2.Controls.Add(this.groupBox1);
+            this.splitContainer3.Size = new System.Drawing.Size(600, 1013);
+            this.splitContainer3.SplitterDistance = 60;
+            this.splitContainer3.TabIndex = 9;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.solutionLabel);
+            this.groupBox4.Controls.Add(this.solutionsListBox);
+            this.groupBox4.Controls.Add(this.toDateTimePicker);
+            this.groupBox4.Controls.Add(this.toLabel);
+            this.groupBox4.Controls.Add(this.fromDateTimePicker);
+            this.groupBox4.Controls.Add(this.fromLabel);
+            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox4.Location = new System.Drawing.Point(0, 0);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(600, 60);
+            this.groupBox4.TabIndex = 5;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Filters";
+            // 
+            // solutionLabel
+            // 
+            this.solutionLabel.AutoSize = true;
+            this.solutionLabel.Location = new System.Drawing.Point(15, 126);
+            this.solutionLabel.Name = "solutionLabel";
+            this.solutionLabel.Size = new System.Drawing.Size(101, 25);
+            this.solutionLabel.TabIndex = 8;
+            this.solutionLabel.Text = "Solutions";
+            // 
+            // solutionsListBox
+            // 
+            this.solutionsListBox.FormattingEnabled = true;
+            this.solutionsListBox.ItemHeight = 25;
+            this.solutionsListBox.Location = new System.Drawing.Point(153, 126);
+            this.solutionsListBox.Name = "solutionsListBox";
+            this.solutionsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
+            this.solutionsListBox.Size = new System.Drawing.Size(425, 104);
+            this.solutionsListBox.TabIndex = 7;
+            // 
+            // toDateTimePicker
+            // 
+            this.toDateTimePicker.CustomFormat = "dd/MM/yyyy HH:mm";
+            this.toDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.toDateTimePicker.Location = new System.Drawing.Point(153, 75);
+            this.toDateTimePicker.Name = "toDateTimePicker";
+            this.toDateTimePicker.Size = new System.Drawing.Size(425, 31);
+            this.toDateTimePicker.TabIndex = 6;
+            // 
+            // toLabel
+            // 
+            this.toLabel.AutoSize = true;
+            this.toLabel.Location = new System.Drawing.Point(15, 81);
+            this.toLabel.Name = "toLabel";
+            this.toLabel.Size = new System.Drawing.Size(37, 25);
+            this.toLabel.TabIndex = 5;
+            this.toLabel.Text = "To";
+            // 
+            // fromDateTimePicker
+            // 
+            this.fromDateTimePicker.CustomFormat = "dd/MM/yyyy HH:mm";
+            this.fromDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.fromDateTimePicker.Location = new System.Drawing.Point(153, 30);
+            this.fromDateTimePicker.Name = "fromDateTimePicker";
+            this.fromDateTimePicker.Size = new System.Drawing.Size(425, 31);
+            this.fromDateTimePicker.TabIndex = 3;
+            // 
+            // fromLabel
+            // 
+            this.fromLabel.AutoSize = true;
+            this.fromLabel.Location = new System.Drawing.Point(15, 36);
+            this.fromLabel.Name = "fromLabel";
+            this.fromLabel.Size = new System.Drawing.Size(61, 25);
+            this.fromLabel.TabIndex = 4;
+            this.fromLabel.Text = "From";
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.lvSolutionImports);
@@ -266,95 +358,15 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Component Detail";
             // 
-            // fromDateTimePicker
+            // tsbRefreshSolutions
             // 
-            this.fromDateTimePicker.CustomFormat = "dd/MM/yyyy HH:mm";
-            this.fromDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.fromDateTimePicker.Location = new System.Drawing.Point(153, 30);
-            this.fromDateTimePicker.Name = "fromDateTimePicker";
-            this.fromDateTimePicker.Size = new System.Drawing.Size(425, 31);
-            this.fromDateTimePicker.TabIndex = 3;
-            // 
-            // fromLabel
-            // 
-            this.fromLabel.AutoSize = true;
-            this.fromLabel.Location = new System.Drawing.Point(15, 36);
-            this.fromLabel.Name = "fromLabel";
-            this.fromLabel.Size = new System.Drawing.Size(61, 25);
-            this.fromLabel.TabIndex = 4;
-            this.fromLabel.Text = "From";
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.solutionLabel);
-            this.groupBox4.Controls.Add(this.solutionsListBox);
-            this.groupBox4.Controls.Add(this.toDateTimePicker);
-            this.groupBox4.Controls.Add(this.toLabel);
-            this.groupBox4.Controls.Add(this.fromDateTimePicker);
-            this.groupBox4.Controls.Add(this.fromLabel);
-            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox4.Location = new System.Drawing.Point(0, 0);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(600, 60);
-            this.groupBox4.TabIndex = 5;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Filters";
-            // 
-            // toLabel
-            // 
-            this.toLabel.AutoSize = true;
-            this.toLabel.Location = new System.Drawing.Point(15, 81);
-            this.toLabel.Name = "toLabel";
-            this.toLabel.Size = new System.Drawing.Size(37, 25);
-            this.toLabel.TabIndex = 5;
-            this.toLabel.Text = "To";
-            // 
-            // toDateTimePicker
-            // 
-            this.toDateTimePicker.CustomFormat = "dd/MM/yyyy HH:mm";
-            this.toDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.toDateTimePicker.Location = new System.Drawing.Point(153, 75);
-            this.toDateTimePicker.Name = "toDateTimePicker";
-            this.toDateTimePicker.Size = new System.Drawing.Size(425, 31);
-            this.toDateTimePicker.TabIndex = 6;
-            // 
-            // solutionsListBox
-            // 
-            this.solutionsListBox.FormattingEnabled = true;
-            this.solutionsListBox.ItemHeight = 25;
-            this.solutionsListBox.Location = new System.Drawing.Point(153, 126);
-            this.solutionsListBox.Name = "solutionsListBox";
-            this.solutionsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.solutionsListBox.Size = new System.Drawing.Size(425, 104);
-            this.solutionsListBox.TabIndex = 7;
-            // 
-            // solutionLabel
-            // 
-            this.solutionLabel.AutoSize = true;
-            this.solutionLabel.Location = new System.Drawing.Point(15, 126);
-            this.solutionLabel.Name = "solutionLabel";
-            this.solutionLabel.Size = new System.Drawing.Size(101, 25);
-            this.solutionLabel.TabIndex = 8;
-            this.solutionLabel.Text = "Solutions";
-            // 
-            // splitContainer3
-            // 
-            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Name = "splitContainer3";
-            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer3.Panel1
-            // 
-            this.splitContainer3.Panel1.AutoScroll = true;
-            this.splitContainer3.Panel1.Controls.Add(this.groupBox4);
-            // 
-            // splitContainer3.Panel2
-            // 
-            this.splitContainer3.Panel2.Controls.Add(this.groupBox1);
-            this.splitContainer3.Size = new System.Drawing.Size(600, 1013);
-            this.splitContainer3.SplitterDistance = 60;
-            this.splitContainer3.TabIndex = 9;
+            this.tsbRefreshSolutions.Image = ((System.Drawing.Image)(resources.GetObject("tsbRefreshSolutions.Image")));
+            this.tsbRefreshSolutions.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbRefreshSolutions.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbRefreshSolutions.Name = "tsbRefreshSolutions";
+            this.tsbRefreshSolutions.Size = new System.Drawing.Size(221, 36);
+            this.tsbRefreshSolutions.Text = "Refresh Solutions";
+            this.tsbRefreshSolutions.Click += new System.EventHandler(this.tsbRefreshSolutions_Click);
             // 
             // lvSolutionImports
             // 
@@ -516,6 +528,12 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.splitContainer3.Panel1.ResumeLayout(false);
+            this.splitContainer3.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
+            this.splitContainer3.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
@@ -523,12 +541,6 @@
             this.splitContainer2.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            this.splitContainer3.Panel1.ResumeLayout(false);
-            this.splitContainer3.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
-            this.splitContainer3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -575,5 +587,6 @@
         private System.Windows.Forms.Label fromLabel;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.ColumnHeader columnHeader15;
+        private System.Windows.Forms.ToolStripButton tsbRefreshSolutions;
     }
 }
