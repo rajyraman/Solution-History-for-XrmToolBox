@@ -144,7 +144,7 @@ namespace Ryr.SolutionHistory
 
         private void tsbCloseThisTab_Click(object sender, EventArgs e)
         {
-            base.CloseToolPrompt();
+            base.CloseTool();
         }
 
         private void lvSolutionImports_SelectedIndexChanged(object sender, EventArgs e)
