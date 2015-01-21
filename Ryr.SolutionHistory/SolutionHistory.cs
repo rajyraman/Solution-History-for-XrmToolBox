@@ -261,7 +261,7 @@ namespace Ryr.SolutionHistory
         {
             if (lvSolutionImports.SelectedItems.Count > 0)
             {
-                var importJobId = new Guid(lvSolutionImports.SelectedItems[0].SubItems[9].Text);
+                var importJobId = new Guid(lvSolutionImports.SelectedItems[0].SubItems[10].Text);
                 WorkAsync("Save Solution Import Log..", ExecuteExportLogRequest, ProcessExportLogResponse, importJobId);
             }
         }
@@ -276,7 +276,7 @@ namespace Ryr.SolutionHistory
             {
                 Filter = "Excel XML Spreadsheet (*.xml)|*.xml",
                 FileName = string.Format("{0}-{1}.xml",
-                    lvSolutionImports.SelectedItems[0].SubItems[1].Text,
+                    lvSolutionImports.SelectedItems[0].SubItems[2].Text,
                     DateTime.Parse(lvSolutionImports.SelectedItems[0].SubItems[0].Text).ToString("yyyyMMdd"))
             };
             if (dialog.ShowDialog() == DialogResult.OK)
