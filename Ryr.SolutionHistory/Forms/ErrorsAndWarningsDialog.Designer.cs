@@ -40,22 +40,22 @@
             // 
             // panel1
             // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.lblDescription);
             this.panel1.Controls.Add(this.lblHeader);
-            this.panel1.Location = new System.Drawing.Point(0, -1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(609, 60);
+            this.panel1.Size = new System.Drawing.Size(1509, 115);
             this.panel1.TabIndex = 5;
             // 
             // lblDescription
             // 
             this.lblDescription.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDescription.Location = new System.Drawing.Point(4, 31);
+            this.lblDescription.Location = new System.Drawing.Point(8, 60);
+            this.lblDescription.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblDescription.Name = "lblDescription";
-            this.lblDescription.Size = new System.Drawing.Size(429, 18);
+            this.lblDescription.Size = new System.Drawing.Size(858, 35);
             this.lblDescription.TabIndex = 3;
             this.lblDescription.Text = "This dialog shows the errors and warnings for the selected component";
             // 
@@ -63,9 +63,10 @@
             // 
             this.lblHeader.AutoSize = true;
             this.lblHeader.Font = new System.Drawing.Font("Tahoma", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblHeader.Location = new System.Drawing.Point(3, 9);
+            this.lblHeader.Location = new System.Drawing.Point(6, 17);
+            this.lblHeader.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Size = new System.Drawing.Size(170, 22);
+            this.lblHeader.Size = new System.Drawing.Size(337, 42);
             this.lblHeader.TabIndex = 1;
             this.lblHeader.Text = "Errors and Warnings";
             // 
@@ -75,9 +76,12 @@
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
-            this.listView1.Location = new System.Drawing.Point(0, 65);
+            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView1.FullRowSelect = true;
+            this.listView1.Location = new System.Drawing.Point(0, 115);
+            this.listView1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(608, 273);
+            this.listView1.Size = new System.Drawing.Size(1509, 707);
             this.listView1.TabIndex = 6;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -85,27 +89,31 @@
             // columnHeader1
             // 
             this.columnHeader1.Text = "Type";
-            this.columnHeader1.Width = 119;
+            this.columnHeader1.Width = 190;
             // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "Code";
-            this.columnHeader2.Width = 88;
+            this.columnHeader2.Width = 244;
             // 
             // columnHeader3
             // 
             this.columnHeader3.Text = "Description";
-            this.columnHeader3.Width = 390;
+            this.columnHeader3.Width = 50;
             // 
-            // ErrorsAndWarningsForm
+            // ErrorsAndWarningsDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(611, 343);
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(1509, 822);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.panel1);
-            this.Name = "ErrorsAndWarningsForm";
+            this.DoubleBuffered = true;
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Name = "ErrorsAndWarningsDialog";
             this.ShowIcon = false;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Errors and Warnings";
             this.panel1.ResumeLayout(false);

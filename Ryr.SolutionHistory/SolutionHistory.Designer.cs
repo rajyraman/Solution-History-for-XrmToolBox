@@ -34,6 +34,7 @@
             this.tsMain = new System.Windows.Forms.ToolStrip();
             this.tsbCloseThisTab = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbRefreshSolutions = new System.Windows.Forms.ToolStripButton();
             this.tsbSolutionHistory = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbExportSolutionLog = new System.Windows.Forms.ToolStripButton();
@@ -52,7 +53,7 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.tsbRefreshSolutions = new System.Windows.Forms.ToolStripButton();
+            this.includeDeletedSolutionsCheckBox = new System.Windows.Forms.CheckBox();
             this.lvSolutionImports = new Ryr.SolutionHistory.Controls.DoubleBufferedListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader15 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -115,7 +116,7 @@
             this.toolStripSeparator3});
             this.tsMain.Location = new System.Drawing.Point(3, 0);
             this.tsMain.Name = "tsMain";
-            this.tsMain.Size = new System.Drawing.Size(905, 39);
+            this.tsMain.Size = new System.Drawing.Size(843, 39);
             this.tsMain.TabIndex = 86;
             this.tsMain.Text = "toolStrip1";
             // 
@@ -134,6 +135,16 @@
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 39);
+            // 
+            // tsbRefreshSolutions
+            // 
+            this.tsbRefreshSolutions.Image = ((System.Drawing.Image)(resources.GetObject("tsbRefreshSolutions.Image")));
+            this.tsbRefreshSolutions.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tsbRefreshSolutions.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbRefreshSolutions.Name = "tsbRefreshSolutions";
+            this.tsbRefreshSolutions.Size = new System.Drawing.Size(221, 36);
+            this.tsbRefreshSolutions.Text = "Refresh Solutions";
+            this.tsbRefreshSolutions.Click += new System.EventHandler(this.tsbRefreshSolutions_Click);
             // 
             // tsbSolutionHistory
             // 
@@ -225,11 +236,12 @@
             // 
             this.splitContainer3.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer3.Size = new System.Drawing.Size(600, 1013);
-            this.splitContainer3.SplitterDistance = 60;
+            this.splitContainer3.SplitterDistance = 80;
             this.splitContainer3.TabIndex = 9;
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.includeDeletedSolutionsCheckBox);
             this.groupBox4.Controls.Add(this.solutionLabel);
             this.groupBox4.Controls.Add(this.solutionsListBox);
             this.groupBox4.Controls.Add(this.toDateTimePicker);
@@ -239,7 +251,7 @@
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Location = new System.Drawing.Point(0, 0);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(600, 60);
+            this.groupBox4.Size = new System.Drawing.Size(600, 80);
             this.groupBox4.TabIndex = 5;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Filters";
@@ -302,12 +314,12 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.lvSolutionImports);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(600, 949);
+            this.groupBox1.Size = new System.Drawing.Size(600, 945);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Solution Imports";
@@ -358,15 +370,15 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Component Detail";
             // 
-            // tsbRefreshSolutions
+            // includeDeletedSolutionsCheckBox
             // 
-            this.tsbRefreshSolutions.Image = ((System.Drawing.Image)(resources.GetObject("tsbRefreshSolutions.Image")));
-            this.tsbRefreshSolutions.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.tsbRefreshSolutions.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbRefreshSolutions.Name = "tsbRefreshSolutions";
-            this.tsbRefreshSolutions.Size = new System.Drawing.Size(221, 36);
-            this.tsbRefreshSolutions.Text = "Refresh Solutions";
-            this.tsbRefreshSolutions.Click += new System.EventHandler(this.tsbRefreshSolutions_Click);
+            this.includeDeletedSolutionsCheckBox.AutoSize = true;
+            this.includeDeletedSolutionsCheckBox.Location = new System.Drawing.Point(153, 245);
+            this.includeDeletedSolutionsCheckBox.Name = "includeDeletedSolutionsCheckBox";
+            this.includeDeletedSolutionsCheckBox.Size = new System.Drawing.Size(365, 29);
+            this.includeDeletedSolutionsCheckBox.TabIndex = 9;
+            this.includeDeletedSolutionsCheckBox.Text = "Include hidden/deleted solutions?";
+            this.includeDeletedSolutionsCheckBox.UseVisualStyleBackColor = true;
             // 
             // lvSolutionImports
             // 
@@ -389,7 +401,7 @@
             this.lvSolutionImports.Margin = new System.Windows.Forms.Padding(4);
             this.lvSolutionImports.MultiSelect = false;
             this.lvSolutionImports.Name = "lvSolutionImports";
-            this.lvSolutionImports.Size = new System.Drawing.Size(592, 917);
+            this.lvSolutionImports.Size = new System.Drawing.Size(592, 913);
             this.lvSolutionImports.TabIndex = 0;
             this.lvSolutionImports.UseCompatibleStateImageBehavior = false;
             this.lvSolutionImports.View = System.Windows.Forms.View.Details;
@@ -588,5 +600,6 @@
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.ColumnHeader columnHeader15;
         private System.Windows.Forms.ToolStripButton tsbRefreshSolutions;
+        private System.Windows.Forms.CheckBox includeDeletedSolutionsCheckBox;
     }
 }

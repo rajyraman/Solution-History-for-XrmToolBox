@@ -35,6 +35,8 @@ namespace Ryr.SolutionHistory.Forms
                     }));
                 }
             }
+            listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
     }
 }

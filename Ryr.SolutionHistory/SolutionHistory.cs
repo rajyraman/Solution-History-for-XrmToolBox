@@ -63,9 +63,14 @@ namespace Ryr.SolutionHistory
                 (w, e) =>
                 {
                     var solutionFilter = new StringBuilder();
+                    var solutions = new StringBuilder();
                     foreach (var s in solutionsListBox.SelectedItems)
                     {
                         solutionFilter.AppendFormat("<value>{0}</value>",s);
+                    }
+                    foreach (var s in solutionsListBox.Items)
+                    {
+                        solutions.AppendFormat("<value>{0}</value>", s);
                     }
                     var importJobsFetchXml = string.Format(
                         @"<fetch version=""1.0"" output-format=""xml-platform"" mapping=""logical"" distinct=""false"">
@@ -81,14 +86,20 @@ namespace Ryr.SolutionHistory
                             <filter type=""and"">
                               <condition attribute=""name"" operator=""eq"" value=""Customizations"" />
                               <condition attribute=""completedon"" operator=""not-null"" />
-                              <condition attribute=""solutionname"" operator=""in"" >{0}</condition>
+                              <filter type=""or"">
+                                  <condition attribute=""solutionname"" operator=""in"" >{0}</condition>
+                                  {3}
+                              </filter>
                               <condition attribute=""startedon"" operator=""on-or-after"" value=""{1}"" />
                               <condition attribute=""completedon"" operator=""on-or-before"" value=""{2}"" />
                             </filter>
                           </entity>
                         </fetch>", solutionFilter.ToString(), 
                                  fromDateTimePicker.Value.ToString("s"),
-                                 toDateTimePicker.Value.ToString("s"));
+                                 toDateTimePicker.Value.ToString("s"),
+                                 includeDeletedSolutionsCheckBox.Checked ? 
+                                 string.Format(@"<condition attribute=""solutionname"" operator=""not-in"" >{0}</condition>", solutions) 
+                                 : "");
                     e.Result = Service.RetrieveMultiple(new FetchExpression(importJobsFetchXml)).Entities;
                 },
                 e =>
@@ -182,6 +193,7 @@ namespace Ryr.SolutionHistory
             var parsedSolutionXml = XElement.Parse(args.Argument.ToString());
             var itemsToTrack = new List<Tuple<string, string, string, IEnumerable<XElement>>>
             {
+                new Tuple<string, string, string,IEnumerable<XElement>>("Solution Manifest", "solutionManifests", "solutionManifest",parsedSolutionXml.Elements("solutionManifests").Elements("solutionManifest")),
                 new Tuple<string, string, string,IEnumerable<XElement>>("Entities", "entities", "entity",parsedSolutionXml.Elements("entities").Elements("entity")),
                 new Tuple<string, string, string,IEnumerable<XElement>>("Web Resources", "webResources", "webResource",parsedSolutionXml.Elements("webResources").Elements("webResource")),
                 new Tuple<string, string, string,IEnumerable<XElement>>("Dashboards", "dashboards", "dashboard",parsedSolutionXml.Elements("dashboards").Elements("dashboard")),
@@ -190,7 +202,8 @@ namespace Ryr.SolutionHistory
                 new Tuple<string, string, string,IEnumerable<XElement>>("Templates", "templates", "template",parsedSolutionXml.Elements("templates").Elements("template")),
                 new Tuple<string, string, string,IEnumerable<XElement>>("Optionsets", "optionSets", "optionSet",parsedSolutionXml.Elements("optionSets").Elements("optionSet")),
                 new Tuple<string, string, string,IEnumerable<XElement>>("Plugin Assemblies", "SolutionPluginAssemblies", "SolutionPluginAssembly",parsedSolutionXml.Elements("SolutionPluginAssemblies").Elements("PluginAssembly")),
-                new Tuple<string, string, string,IEnumerable<XElement>>("Plugin Assembly Steps", "SdkMessageProcessingSteps", "SdkMessageProcessingStep",parsedSolutionXml.Elements("SdkMessageProcessingSteps").Elements("SdkMessageProcessingStep"))
+                new Tuple<string, string, string,IEnumerable<XElement>>("Plugin Assembly Steps", "SdkMessageProcessingSteps", "SdkMessageProcessingStep",parsedSolutionXml.Elements("SdkMessageProcessingSteps").Elements("SdkMessageProcessingStep")),
+                new Tuple<string, string, string,IEnumerable<XElement>>("Upgrades", "upgradeHandlers", "upgradeHandler",parsedSolutionXml.Elements("upgradeHandlers").Elements("upgradeHandler"))
             };
             args.Result = itemsToTrack;
         }
@@ -213,7 +226,7 @@ namespace Ryr.SolutionHistory
                 listItem.SubItems.Add(itemToTrack.Item1);
                 listItem.SubItems.Add(itemToTrack.Item2);
                 var importStatuses = itemToTrack.Item3;
-                if (importStatuses.Any(x => x.Attribute("result").Value == "error"))
+                if (importStatuses.Any(x => x.Attribute("result").Value == "error" || x.Attribute("result").Value == "failure"))
                 {
                     listItem.ImageIndex = 1;
                 }
@@ -249,7 +262,7 @@ namespace Ryr.SolutionHistory
 
             ListViewItem item = lvSolutionComponentDetail.SelectedItems[0];
             var errorsAndWarnings = (IEnumerable<XElement>)item.Tag;
-            if (!errorsAndWarnings.Any(x => x.Attribute("result").Value == "warning" || x.Attribute("result").Value == "error"))
+            if (!errorsAndWarnings.Any(x => x.Attribute("result").Value == "warning" || x.Attribute("result").Value == "error" ||  x.Attribute("result").Value == "failure"))
             {
                 return;
             }
