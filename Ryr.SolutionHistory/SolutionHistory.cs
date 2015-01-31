@@ -111,10 +111,10 @@ namespace Ryr.SolutionHistory
                     {
                         var listItem = new ListViewItem
                         {
-                            Text = importJob.GetAttributeValue<DateTime>("startedon").ToString("dd-MMM-yyyy HH:mm"),
+                            Text = importJob.GetAttributeValue<DateTime>("startedon").ToLocalTime().ToString("dd-MMM-yyyy HH:mm"),
                             Tag = importJob.GetAttributeValue<string>("data")
                         };
-                        listItem.SubItems.Add(importJob.GetAttributeValue<DateTime>("completedon").ToString("dd-MMM-yyyy HH:mm"));
+                        listItem.SubItems.Add(importJob.GetAttributeValue<DateTime>("completedon").ToLocalTime().ToString("dd-MMM-yyyy HH:mm"));
                         var parsedComponentXml = XElement.Parse(importJob.GetAttributeValue<string>("data"));
                         var solutionManifest = parsedComponentXml.Elements("solutionManifests").Elements("solutionManifest").ToList();
                         var upgradeInformation = parsedComponentXml.Elements("upgradeSolutionPackageInformation").ToList();
