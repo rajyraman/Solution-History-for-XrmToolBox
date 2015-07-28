@@ -1,0 +1,23 @@
+﻿using System.ComponentModel.Composition;
+using XrmToolBox.Extensibility;
+using XrmToolBox.Extensibility.Interfaces;
+
+namespace Ryr.SolutionHistory
+{
+    [Export(typeof(IXrmToolBoxPlugin)),
+    ExportMetadata("Name", "Solution History"),
+    ExportMetadata("Description", "Displays the list of solution imports and their statuses"),
+    ExportMetadata("SmallImageBase64", "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYYAAB2GAV2iE4EAAAHbSURBVFhH7ZfLL0NBFMa/Wy2VSFjZ2ggL/4NEYqESjVe7Ymtvx8LbgtgIEomyYqVC6MaCiI3/gbC18xbaetR33GnSiNvOXJVL0l/ypTMnNzNn5nxzklr+yUwGHmJhzNsEfExB0vBMPv54SimBf5iAvBknucAsgXfqkbp3UIoyxMK4Zh94pV6A5DRQ4bdDXxlIALEjDqrtuQ56N8CTW9w0M+O8ubDSAYyGOUjacx30boALxiLA+TVw9aRigjQTQa2QfAOWQkDNCCdVdqwQ2gnMdwIXN8BCm4o5MHwIzBxwELTnhTAyYVn2xGTvFOjbBno3VUARzFOi7zBKoLxMDUi4EdjoBraiKuAS7RIs9wBzJ0B7PfDMFyEnzZ72VplOLqipFhjc5aDYJUjRYJEmYLEdWKXToxwnmYhsLnNRjLoz7AVmjSiH5jo6XiXzE4xLEGIJ5OSfflSmzK7gpgRGz/DyAZhtVTEHJo6B8X0OfuMZpumDLIkzoH+HvoirgEuMEnjPuauOBmC9C4izQ+Yi5TFBuwRrfO/i+Ps8LpfNp1rYL4Y4KWorli/SlLis0NdSpkpKGbQQeiWQxcqpgPrNJ4PNBX0PyKK6MsB1IyoWpQT+QALyrDyUFfD07znwAQL3rzTVqdqIAAAAAElFTkSuQmCC"),
+    ExportMetadata("BigImageBase64", "iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAHYYAAB2GAV2iE4EAAAOJSURBVHhe7ZxdSBVBFMf/93opkTKjD7r2kBVFgQUiUdEHUSIFET7aBxVGSVKCIFaGJZYofYA+9CiRlJU99KlCiBVEiEVl2Ydp9tCTL1oUFJrZGXdgo5doz96543Z+cHD2MNxhf3fcPbOz3FBS5egoBM+EcFwEcgiTQqVRwmOE6Y/AQAQyEYFMRCATEchEBDIRgUxEIBMRyEQEMhGBTEQgExHIRAQyEYFMRCATEchEBDKJn0C1EzNE8Z0RwxRxJoTyOGwqqRG/ALvXAHNSgJGfTvpfmBgBbnUDj3vpIMnJxQPzAtVon4DarUDhcifFYf0F4F4XNSY5x6Yx+y+s5A0Cdbv8kadoo8/akkkNmtFjn28YcwL1zLu+H8jLcFJ+cTOXLgerqREHiWYEqpP6DLQWAjmLnJTfnM+hWZ1Fja8UBiWaEfgNuJEPbJinj2NE7SZg5ypqGLw7m7mJ0Kx4UwJEk4G+ASAhBl/b8AiQmQpUPQRKmyiR6ORjjTGBfaV083gOVDbqnN/QWbw9STOdSpvDd+g4iALrXwCXKN4d1HkfCe2lMU4Bja/NCjRbxhDDHopmmzEu8G+c66AZ1AocbXOj+C7Vex90B8uwTmBTD5UkdK2s73Sj7hnQ2a87WIZ1Apu3A/3FwMciNwYPAUUrdAfLsE7geMO4wEjAvjKjZUxDF1DxAChfRyn1LNAnUqhkKblMY1SYL2OMCrzyilYJzcCCKDBEKwe/SIwA3e9pjGMBF6gK6YaXdLIHdN5H/ptC2s+ZZwPWXdI3NwCpZ4G0Gjem08yqadcdLMM6gdnzgW1LgNx0N3YsBdJn6g6WYZ1A9aj/TDZQneVGzUYgK8bPEr0SsKrMPMYFTkjQjYBgvg5soTpwltSB/8YfK5Gytf6vRI5cpTGCvhJRhfRFih55Iu2dH/JEOrZMqabZtI+i4LfIAwrUTpuFWCewfQ/wpBx4WuZGxwnnumkj1glcPMPZ382IurFsNhCdrDtYhnUCxxvGBUoh7QVdxoy9mXBN5/yG7u6BfzNh7lSqAQeAiPrFC59RG/YLpwGnHwEltykRKIG06shfCaSl6OMYEaYvpqUXuK9e+6XlnQnMCFSopZuJIlqJMyRPYU5gQJEyhokIZCICmYhAJiKQiQhkIgKZiEAmIpCJCGQiApmIQCYikIkIZCICmYhAJiKQiQhkEh77fQEJzxFKrpI9Ee8AvwAB9nnvqlh01wAAAABJRU5ErkJggg=="),
+    ExportMetadata("BackgroundColor", "Lavender"),
+    ExportMetadata("PrimaryFontColor", "Black"),
+    ExportMetadata("SecondaryFontColor", "Gray")]
+
+    public class Plugin : PluginBase
+    {
+        public override IXrmToolBoxPluginControl GetControl()
+        {
+            return new SolutionHistory();
+        }
+    }
+}
