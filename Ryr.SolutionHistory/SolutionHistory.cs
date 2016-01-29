@@ -12,6 +12,8 @@ using Microsoft.Xrm.Sdk.Query;
 using Ryr.SolutionHistory.Forms;
 using Tanguy.WinForm.Utilities.DelegatesHelpers;
 using XrmToolBox.Extensibility;
+using XrmToolBox.Extensibility.Interfaces;
+using System.ComponentModel.Composition;
 
 namespace Ryr.SolutionHistory
 {
@@ -47,23 +49,22 @@ namespace Ryr.SolutionHistory
                 .ToList().ForEach(x => solutionsListBox.SetSelected(x, true));
             solutionsListBox.TopIndex = 0;
         }
+
         private void RetrieveSolutionHistory()
         {
-            WorkAsync("Loading solution history..", 
-                (w, e) =>
+            WorkAsync(new WorkAsyncInfo("Loading solution history..", (e) => {
+                var solutionFilter = new StringBuilder();
+                var solutions = new StringBuilder();
+                foreach (var s in solutionsListBox.SelectedItems)
                 {
-                    var solutionFilter = new StringBuilder();
-                    var solutions = new StringBuilder();
-                    foreach (var s in solutionsListBox.SelectedItems)
-                    {
-                        solutionFilter.AppendFormat("<value>{0}</value>",s);
-                    }
-                    foreach (var s in solutionsListBox.Items)
-                    {
-                        solutions.AppendFormat("<value>{0}</value>", s);
-                    }
-                    var importJobsFetchXml = string.Format(
-                        @"<fetch version=""1.0"" output-format=""xml-platform"" mapping=""logical"" distinct=""false"">
+                    solutionFilter.AppendFormat("<value>{0}</value>", s);
+                }
+                foreach (var s in solutionsListBox.Items)
+                {
+                    solutions.AppendFormat("<value>{0}</value>", s);
+                }
+                var importJobsFetchXml = string.Format(
+                    @"<fetch version=""1.0"" output-format=""xml-platform"" mapping=""logical"" distinct=""false"">
                           <entity name=""importjob"">
                             <attribute name=""importjobid"" />
                             <attribute name=""solutionname"" />
@@ -84,57 +85,52 @@ namespace Ryr.SolutionHistory
                               <condition attribute=""completedon"" operator=""on-or-before"" value=""{2}"" />
                             </filter>
                           </entity>
-                        </fetch>", solutionFilter.ToString(), 
-                                 fromDateTimePicker.Value.ToString("s"),
-                                 toDateTimePicker.Value.ToString("s"),
-                                 includeDeletedSolutionsCheckBox.Checked ? 
-                                 string.Format(@"<condition attribute=""solutionname"" operator=""not-in"" >{0}</condition>", solutions) 
-                                 : "");
-                    e.Result = Service.RetrieveMultiple(new FetchExpression(importJobsFetchXml)).Entities;
-                },
-                e =>
+                        </fetch>", solutionFilter.ToString(),
+                             fromDateTimePicker.Value.ToString("s"),
+                             toDateTimePicker.Value.ToString("s"),
+                             includeDeletedSolutionsCheckBox.Checked ?
+                             string.Format(@"<condition attribute=""solutionname"" operator=""not-in"" >{0}</condition>", solutions)
+                             : "");
+                e.Result = Service.RetrieveMultiple(new FetchExpression(importJobsFetchXml)).Entities;
+            }) { PostWorkCallBack = (completedargs) => {
+
+                ListViewDelegates.ClearItems(lvSolutionImports);
+                ListViewDelegates.ClearItems(lvSolutionComponents);
+                ListViewDelegates.ClearItems(lvSolutionComponentDetail);
+                foreach (var importJob in (ICollection<Entity>)completedargs.Result)
                 {
-                    ListViewDelegates.ClearItems(lvSolutionImports);
-                    ListViewDelegates.ClearItems(lvSolutionComponents);
-                    ListViewDelegates.ClearItems(lvSolutionComponentDetail);
-                    foreach (var importJob in (ICollection<Entity>)e.Result)
+                    var listItem = new ListViewItem
                     {
-                        var listItem = new ListViewItem
-                        {
-                            Text = importJob.GetAttributeValue<DateTime>("startedon").ToLocalTime().ToString("dd-MMM-yyyy HH:mm"),
-                            Tag = importJob.GetAttributeValue<string>("data")
-                        };
-                        listItem.SubItems.Add(importJob.GetAttributeValue<DateTime>("completedon").ToLocalTime().ToString("dd-MMM-yyyy HH:mm"));
-                        var parsedComponentXml = XElement.Parse(importJob.GetAttributeValue<string>("data"));
-                        var solutionManifest = parsedComponentXml.Elements("solutionManifests").Elements("solutionManifest").ToList();
-                        var upgradeInformation = parsedComponentXml.Elements("upgradeSolutionPackageInformation").ToList();
+                        Text = importJob.GetAttributeValue<DateTime>("startedon").ToLocalTime().ToString("dd-MMM-yyyy HH:mm"),
+                        Tag = importJob.GetAttributeValue<string>("data")
+                    };
+                    listItem.SubItems.Add(importJob.GetAttributeValue<DateTime>("completedon").ToLocalTime().ToString("dd-MMM-yyyy HH:mm"));
+                    var parsedComponentXml = XElement.Parse(importJob.GetAttributeValue<string>("data"));
+                    var solutionManifest = parsedComponentXml.Elements("solutionManifests").Elements("solutionManifest").ToList();
+                    var upgradeInformation = parsedComponentXml.Elements("upgradeSolutionPackageInformation").ToList();
 
-                        var name =
-                            solutionManifest.Elements("LocalizedNames")
-                                .Elements("LocalizedName")
-                                .Attributes("description")
-                                .Select(att => att.Value)
-                                .FirstOrDefault() ?? importJob.GetAttributeValue<string>("solutionname");
+                    var name =
+                        solutionManifest.Elements("LocalizedNames")
+                            .Elements("LocalizedName")
+                            .Attributes("description")
+                            .Select(att => att.Value)
+                            .FirstOrDefault() ?? importJob.GetAttributeValue<string>("solutionname");
 
-                        listItem.SubItems.Add(name);
-                        listItem.SubItems.Add(solutionManifest.Elements("Version").Select(el => " " + el.Value).FirstOrDefault() ?? string.Empty);
-                        listItem.SubItems.Add((solutionManifest.Elements("Managed").Select(cv => cv.Value).FirstOrDefault() ?? string.Empty) == "0"
-                            ? "Unmanaged"
-                            : "Managed");
-                        listItem.SubItems.Add(importJob.GetAttributeValue<EntityReference>("createdby").Name);
-                        listItem.SubItems.Add(upgradeInformation.Elements("currentVersion").Select(cv => cv.Value).FirstOrDefault() ?? string.Empty);
-                        listItem.SubItems.Add(upgradeInformation.Elements("fileVersion").Select(fv => fv.Value).FirstOrDefault() ?? string.Empty);
-                        listItem.SubItems.Add(solutionManifest.Elements("Publisher").Elements("LocalizedNames").Elements("LocalizedName").Attributes("description").Select(att => att.Value).FirstOrDefault() ?? solutionManifest.Elements("Publisher").Elements("UniqueName").Select(un => un.Value).FirstOrDefault() ?? string.Empty);
-                        listItem.SubItems.Add(importJob.GetAttributeValue<double>("progress").ToString("0.##"));
-                        listItem.SubItems.Add(importJob.GetAttributeValue<Guid>("importjobid").ToString());
-                        ListViewDelegates.AddItem(lvSolutionImports, listItem);
-                    }
-                    lvSolutionImports.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-                },
-                e =>
-                {
-
-                });
+                    listItem.SubItems.Add(name);
+                    listItem.SubItems.Add(solutionManifest.Elements("Version").Select(el => " " + el.Value).FirstOrDefault() ?? string.Empty);
+                    listItem.SubItems.Add((solutionManifest.Elements("Managed").Select(cv => cv.Value).FirstOrDefault() ?? string.Empty) == "0"
+                        ? "Unmanaged"
+                        : "Managed");
+                    listItem.SubItems.Add(importJob.GetAttributeValue<EntityReference>("createdby").Name);
+                    listItem.SubItems.Add(upgradeInformation.Elements("currentVersion").Select(cv => cv.Value).FirstOrDefault() ?? string.Empty);
+                    listItem.SubItems.Add(upgradeInformation.Elements("fileVersion").Select(fv => fv.Value).FirstOrDefault() ?? string.Empty);
+                    listItem.SubItems.Add(solutionManifest.Elements("Publisher").Elements("LocalizedNames").Elements("LocalizedName").Attributes("description").Select(att => att.Value).FirstOrDefault() ?? solutionManifest.Elements("Publisher").Elements("UniqueName").Select(un => un.Value).FirstOrDefault() ?? string.Empty);
+                    listItem.SubItems.Add(importJob.GetAttributeValue<double>("progress").ToString("0.##"));
+                    listItem.SubItems.Add(importJob.GetAttributeValue<Guid>("importjobid").ToString());
+                    ListViewDelegates.AddItem(lvSolutionImports, listItem);
+                }
+                lvSolutionImports.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            } });
         }
 
         private void tsbSolutionHistory_Click(object sender, EventArgs e)
@@ -154,7 +150,7 @@ namespace Ryr.SolutionHistory
             {
                 tsbExportSolutionLog.Enabled = true;
                 string importDataXml = lvSolutionImports.SelectedItems[0].Tag.ToString();
-                WorkAsync("Parsing solution XML...", ParseSolutionXml, LoadParsedSolutionXmlToGrid, importDataXml);
+                WorkAsync(new WorkAsyncInfo("Parsing solution XML...", ParseSolutionXml) { PostWorkCallBack = LoadParsedSolutionXmlToGrid, AsyncArgument = importDataXml });
             }
             else
             {
@@ -202,7 +198,7 @@ namespace Ryr.SolutionHistory
         {
             if (lvSolutionComponents.SelectedItems.Count > 0)
             {
-                WorkAsync("Parsing component XML...", ParseComponentXml, LoadParsedComponentXmlToGrid, lvSolutionComponents.SelectedItems[0].Tag);
+                WorkAsync(new WorkAsyncInfo("Parsing component XML...", ParseComponentXml) { PostWorkCallBack = LoadParsedComponentXmlToGrid, AsyncArgument = lvSolutionComponents.SelectedItems[0].Tag });
             }
         }
 
@@ -265,7 +261,7 @@ namespace Ryr.SolutionHistory
             if (lvSolutionImports.SelectedItems.Count > 0)
             {
                 var importJobId = new Guid(lvSolutionImports.SelectedItems[0].SubItems[10].Text);
-                WorkAsync("Save Solution Import Log..", ExecuteExportLogRequest, ProcessExportLogResponse, importJobId);
+                WorkAsync(new WorkAsyncInfo("Save Solution Import Log..", ExecuteExportLogRequest) { PostWorkCallBack = ProcessExportLogResponse, AsyncArgument = importJobId });
             }
         }
 
