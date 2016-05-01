@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,7 +27,7 @@ namespace Ryr.SolutionHistory
 
         private void RetrieveCurrentSolutions()
         {
-            fromDateTimePicker.Value = toDateTimePicker.Value.AddMonths(-3);
+            fromDateTimePicker.Value = toDateTimePicker.Value.AddDays(-7);
             solutionsListBox.Items.Clear();
             var solutionFetchXml = @"
                     <fetch version=""1.0"" output-format=""xml-platform"" mapping=""logical"" distinct=""false"">
@@ -166,6 +167,16 @@ namespace Ryr.SolutionHistory
             foreach (var itemToTrack in itemsToTrack)
             {
                 var listItem = new ListViewItem { Text = itemToTrack.Item1, Tag = itemToTrack.Item4 };
+                var resultNodes = itemToTrack.Item4.Descendants("result");
+                if (resultNodes.Any(x => x.Attribute("result") != null && 
+                    (x.Attribute("result").Value == "failure" || x.Attribute("result").Value == "error")))
+                {
+                    listItem.ForeColor = Color.Red;
+                }
+                if (resultNodes.Any(x => x.Attribute("result") != null && x.Attribute("result").Value == "warning"))
+                {
+                    listItem.ForeColor = Color.Orange;
+                }
                 listItem.SubItems.Add(itemToTrack.Item4.Count().ToString());
                 ListViewDelegates.AddItem(lvSolutionComponents, listItem);
                 lvSolutionComponents.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
