@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -100,32 +101,46 @@ namespace Ryr.SolutionHistory
                 ListViewDelegates.ClearItems(lvSolutionComponentDetail);
                 foreach (var importJob in (ICollection<Entity>)completedargs.Result)
                 {
+                    var solutionXml = importJob.GetAttributeValue<string>("data");
                     var listItem = new ListViewItem
                     {
                         Text = importJob.GetAttributeValue<DateTime>("startedon").ToLocalTime().ToString("dd-MMM-yyyy HH:mm"),
-                        Tag = importJob.GetAttributeValue<string>("data")
+                        Tag = solutionXml
                     };
                     listItem.SubItems.Add(importJob.GetAttributeValue<DateTime>("completedon").ToLocalTime().ToString("dd-MMM-yyyy HH:mm"));
-                    var parsedComponentXml = XElement.Parse(importJob.GetAttributeValue<string>("data"));
-                    var solutionManifest = parsedComponentXml.Elements("solutionManifests").Elements("solutionManifest").ToList();
-                    var upgradeInformation = parsedComponentXml.Elements("upgradeSolutionPackageInformation").ToList();
+                    var parsedComponentXml = XElement.Parse(solutionXml);
+                    var solutionManifest = parsedComponentXml
+                        .Elements(SolutionElement.SolutionManifests)
+                        .Elements(SolutionElement.SolutionManifest).ToList();
+                    var upgradeInformation = parsedComponentXml.Elements(SolutionElement.UpgradeSolutionPackageInformation).ToList();
 
                     var name =
-                        solutionManifest.Elements("LocalizedNames")
-                            .Elements("LocalizedName")
-                            .Attributes("description")
+                        solutionManifest
+                            .Elements(SolutionElement.LocalizedNames)
+                            .Elements(SolutionElement.LocalizedName)
+                            .Attributes(SolutionAttribute.Description)
                             .Select(att => att.Value)
                             .FirstOrDefault() ?? importJob.GetAttributeValue<string>("solutionname");
 
                     listItem.SubItems.Add(name);
-                    listItem.SubItems.Add(solutionManifest.Elements("Version").Select(el => " " + el.Value).FirstOrDefault() ?? string.Empty);
-                    listItem.SubItems.Add((solutionManifest.Elements("Managed").Select(cv => cv.Value).FirstOrDefault() ?? string.Empty) == "0"
+                    listItem.SubItems.Add(solutionManifest.Elements(SolutionElement.Version).Select(el => " " + el.Value).FirstOrDefault() ?? string.Empty);
+                    listItem.SubItems.Add((solutionManifest.Elements(SolutionElement.Managed).Select(cv => cv.Value).FirstOrDefault() ?? string.Empty) == "0"
                         ? "Unmanaged"
                         : "Managed");
                     listItem.SubItems.Add(importJob.GetAttributeValue<EntityReference>("createdby").Name);
-                    listItem.SubItems.Add(upgradeInformation.Elements("currentVersion").Select(cv => cv.Value).FirstOrDefault() ?? string.Empty);
-                    listItem.SubItems.Add(upgradeInformation.Elements("fileVersion").Select(fv => fv.Value).FirstOrDefault() ?? string.Empty);
-                    listItem.SubItems.Add(solutionManifest.Elements("Publisher").Elements("LocalizedNames").Elements("LocalizedName").Attributes("description").Select(att => att.Value).FirstOrDefault() ?? solutionManifest.Elements("Publisher").Elements("UniqueName").Select(un => un.Value).FirstOrDefault() ?? string.Empty);
+                    listItem.SubItems.Add(upgradeInformation.Elements(SolutionElement.CurrentVersion).Select(cv => cv.Value).FirstOrDefault() ?? string.Empty);
+                    listItem.SubItems.Add(upgradeInformation.Elements(SolutionElement.FileVersion).Select(fv => fv.Value).FirstOrDefault() ?? string.Empty);
+                    listItem.SubItems.Add(solutionManifest
+                        .Elements(SolutionElement.Publisher)
+                        .Elements(SolutionElement.LocalizedNames)
+                        .Elements(SolutionElement.LocalizedName)
+                        .Attributes(SolutionAttribute.Description)
+                        .Select(att => att.Value).FirstOrDefault() ?? 
+                        solutionManifest
+                        .Elements(SolutionElement.Publisher)
+                        .Elements(SolutionElement.UniqueName)
+                        .Select(un => un.Value).FirstOrDefault() ?? 
+                        string.Empty);
                     listItem.SubItems.Add(importJob.GetAttributeValue<double>("progress").ToString("0.##"));
                     listItem.SubItems.Add(importJob.GetAttributeValue<Guid>("importjobid").ToString());
                     ListViewDelegates.AddItem(lvSolutionImports, listItem);
@@ -151,7 +166,11 @@ namespace Ryr.SolutionHistory
             {
                 tsbExportSolutionLog.Enabled = true;
                 string importDataXml = lvSolutionImports.SelectedItems[0].Tag.ToString();
-                WorkAsync(new WorkAsyncInfo("Parsing solution XML...", ParseSolutionXml) { PostWorkCallBack = LoadParsedSolutionXmlToGrid, AsyncArgument = importDataXml });
+                WorkAsync(new WorkAsyncInfo("Parsing solution XML...", ParseSolutionXml)
+                {
+                    PostWorkCallBack = LoadParsedSolutionXmlToGrid, 
+                    AsyncArgument = importDataXml
+                });
             }
             else
             {
@@ -162,25 +181,34 @@ namespace Ryr.SolutionHistory
 
         private void LoadParsedSolutionXmlToGrid(RunWorkerCompletedEventArgs args)
         {
-            var itemsToTrack = (List<Tuple<string, string, string, IEnumerable<XElement>>>)args.Result;
+            var itemsToTrack = (List<Tuple<string, IEnumerable<XElement>>>)args.Result;
             ListViewDelegates.ClearItems(lvSolutionComponents);
             foreach (var itemToTrack in itemsToTrack)
             {
-                var listItem = new ListViewItem { Text = itemToTrack.Item1, Tag = itemToTrack.Item4 };
-                var resultNodes = itemToTrack.Item4.Descendants("result");
-                if (resultNodes.Any(x => x.Attribute("result") != null && 
-                    (x.Attribute("result").Value == "failure" || x.Attribute("result").Value == "error")))
+                var listItem = new ListViewItem { Text = itemToTrack.Item1, Tag = itemToTrack.Item2 };
+                var resultNodes = itemToTrack.Item2.Descendants(SolutionAttribute.Result).ToList();
+                if (resultNodes.Any(x => x.Attribute(SolutionAttribute.Result) != null &&
+                    (x.Attribute(SolutionAttribute.Result).Value.Equals(ComponentResult.Failures, StringComparison.InvariantCultureIgnoreCase) ||
+                    x.Attribute(SolutionAttribute.Result).Value.Equals(ComponentResult.Errors, StringComparison.InvariantCultureIgnoreCase))))
                 {
                     listItem.ForeColor = Color.Red;
                 }
-                if (resultNodes.Any(x => x.Attribute("result") != null && x.Attribute("result").Value == "warning"))
+                if (resultNodes.Any(x => x.Attribute(SolutionAttribute.Result) != null &&
+                    x.Attribute(SolutionAttribute.Result).Value.Equals(ComponentResult.Warnings, StringComparison.InvariantCultureIgnoreCase)))
                 {
                     listItem.ForeColor = Color.Orange;
                 }
-                listItem.SubItems.Add(itemToTrack.Item4.Count().ToString());
-                ListViewDelegates.AddItem(lvSolutionComponents, listItem);
-                lvSolutionComponents.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+                if (!itemToTrack.Item2.Any())
+                {
+                    ListViewDelegates.RemoveItem(lvSolutionComponents, listItem);
+                }
+                else
+                {
+                    listItem.SubItems.Add(itemToTrack.Item2.Count().ToString());
+                    ListViewDelegates.AddItem(lvSolutionComponents, listItem);
+                }
             }
+            lvSolutionComponents.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
 
         private void ParseSolutionXml(DoWorkEventArgs args)
@@ -188,20 +216,12 @@ namespace Ryr.SolutionHistory
             ListViewDelegates.ClearItems(lvSolutionComponents);
             ListViewDelegates.ClearItems(lvSolutionComponentDetail);
             var parsedSolutionXml = XElement.Parse(args.Argument.ToString());
-            var itemsToTrack = new List<Tuple<string, string, string, IEnumerable<XElement>>>
+            var itemsToTrack = new List<Tuple<string, IEnumerable<XElement>>>();
+            foreach (var field in typeof(SolutionComponent).GetFields())
             {
-                new Tuple<string, string, string,IEnumerable<XElement>>("Solution Manifest", "solutionManifests", "solutionManifest",parsedSolutionXml.Elements("solutionManifests").Elements("solutionManifest")),
-                new Tuple<string, string, string,IEnumerable<XElement>>("Entities", "entities", "entity",parsedSolutionXml.Elements("entities").Elements("entity")),
-                new Tuple<string, string, string,IEnumerable<XElement>>("Web Resources", "webResources", "webResource",parsedSolutionXml.Elements("webResources").Elements("webResource")),
-                new Tuple<string, string, string,IEnumerable<XElement>>("Dashboards", "dashboards", "dashboard",parsedSolutionXml.Elements("dashboards").Elements("dashboard")),
-                new Tuple<string, string, string,IEnumerable<XElement>>("Security Roles", "securityroles", "securityrole",parsedSolutionXml.Elements("securityroles").Elements("securityrole")),
-                new Tuple<string, string, string,IEnumerable<XElement>>("Workflows", "workflows", "workflow",parsedSolutionXml.Elements("workflows").Elements("workflow")),
-                new Tuple<string, string, string,IEnumerable<XElement>>("Templates", "templates", "template",parsedSolutionXml.Elements("templates").Elements("template")),
-                new Tuple<string, string, string,IEnumerable<XElement>>("Optionsets", "optionSets", "optionSet",parsedSolutionXml.Elements("optionSets").Elements("optionSet")),
-                new Tuple<string, string, string,IEnumerable<XElement>>("Plugin Assemblies", "SolutionPluginAssemblies", "SolutionPluginAssembly",parsedSolutionXml.Elements("SolutionPluginAssemblies").Elements("PluginAssembly")),
-                new Tuple<string, string, string,IEnumerable<XElement>>("Plugin Assembly Steps", "SdkMessageProcessingSteps", "SdkMessageProcessingStep",parsedSolutionXml.Elements("SdkMessageProcessingSteps").Elements("SdkMessageProcessingStep")),
-                new Tuple<string, string, string,IEnumerable<XElement>>("Upgrades", "upgradeHandlers", "upgradeHandler",parsedSolutionXml.Elements("upgradeHandlers").Elements("upgradeHandler"))
-            };
+                itemsToTrack.Add(new Tuple<string, IEnumerable<XElement>>(field.Name,
+                    parsedSolutionXml.Descendants(field.GetValue(null).ToString())));
+            } 		
             args.Result = itemsToTrack;
         }
 
@@ -209,7 +229,11 @@ namespace Ryr.SolutionHistory
         {
             if (lvSolutionComponents.SelectedItems.Count > 0)
             {
-                WorkAsync(new WorkAsyncInfo("Parsing component XML...", ParseComponentXml) { PostWorkCallBack = LoadParsedComponentXmlToGrid, AsyncArgument = lvSolutionComponents.SelectedItems[0].Tag });
+                WorkAsync(new WorkAsyncInfo("Parsing component XML...", ParseComponentXml)
+                {
+                    PostWorkCallBack = LoadParsedComponentXmlToGrid, 
+                    AsyncArgument = lvSolutionComponents.SelectedItems[0].Tag
+                });
             }
         }
 
@@ -219,16 +243,21 @@ namespace Ryr.SolutionHistory
             ListViewDelegates.ClearItems(lvSolutionComponentDetail);
             foreach (var itemToTrack in itemsToTrack)
             {
-                var listItem = new ListViewItem { Text = string.Empty, Tag = itemToTrack.Item3};
+                var listItem = new ListViewItem
+                {
+                    Text = string.Empty, 
+                    Tag = itemToTrack.Item3
+                };
                 listItem.SubItems.Add(itemToTrack.Item1);
                 listItem.SubItems.Add(itemToTrack.Item2);
-                var importStatuses = itemToTrack.Item3;
-                if (importStatuses.Any(x => x.Attribute("result").Value == "error" || x.Attribute("result").Value == "failure"))
+                var importStatuses = itemToTrack.Item3.Where(x => x.Attribute(SolutionAttribute.Result) != null).ToList();
+                if (importStatuses.Any(x => x.Attribute(SolutionAttribute.Result).Value == ComponentResult.Errors ||
+                    x.Attribute(SolutionAttribute.Result).Value == ComponentResult.Failures))
                 {
                     listItem.ImageIndex = 1;
                 }
                 else
-                if (importStatuses.Any(x => x.Attribute("result").Value == "warning"))
+                if (importStatuses.Any(x => x.Attribute(SolutionAttribute.Result).Value == ComponentResult.Warnings))
                 {
                     listItem.ImageIndex = 2;
                 }
@@ -244,11 +273,16 @@ namespace Ryr.SolutionHistory
         {
             ListViewDelegates.ClearItems(lvSolutionComponentDetail);
             var parsedComponentXml = (IEnumerable<XElement>)args.Argument;
-            var itemsToTrack = parsedComponentXml
-                .Select(xElement => new Tuple<string, string, IEnumerable<XElement>>(
-                    xElement.Attribute("LocalizedName") != null ? xElement.Attribute("LocalizedName").Value : xElement.Attribute("name").Value,
-                    xElement.Attribute("id").Value, xElement.Elements("result")))
-                .ToList();
+            var itemsToTrack = new List<Tuple<string, string, IEnumerable<XElement>>>();
+            foreach (var xElement in parsedComponentXml)
+            {
+                var componentName = xElement.Attribute(SolutionAttribute.LocalizedName) ??
+                                    xElement.Attribute(SolutionAttribute.Name);
+                itemsToTrack.Add(new Tuple<string, string, IEnumerable<XElement>>(
+                    componentName != null ? componentName.Value : string.Empty,
+                    xElement.Attribute(SolutionAttribute.Id) != null ? xElement.Attribute(SolutionAttribute.Id).Value : string.Empty, 
+                    xElement.Elements(SolutionAttribute.Result)));
+            }
             args.Result = itemsToTrack;
         }
 
@@ -259,7 +293,9 @@ namespace Ryr.SolutionHistory
 
             ListViewItem item = lvSolutionComponentDetail.SelectedItems[0];
             var errorsAndWarnings = (IEnumerable<XElement>)item.Tag;
-            if (!errorsAndWarnings.Any(x => x.Attribute("result").Value == "warning" || x.Attribute("result").Value == "error" ||  x.Attribute("result").Value == "failure"))
+            if (!errorsAndWarnings.Any(x => x.Attribute(SolutionAttribute.Result).Value == ComponentResult.Warnings ||
+                x.Attribute(SolutionAttribute.Result).Value == ComponentResult.Errors || 
+                x.Attribute(SolutionAttribute.Result).Value == ComponentResult.Failures))
             {
                 return;
             }
@@ -272,7 +308,11 @@ namespace Ryr.SolutionHistory
             if (lvSolutionImports.SelectedItems.Count > 0)
             {
                 var importJobId = new Guid(lvSolutionImports.SelectedItems[0].SubItems[10].Text);
-                WorkAsync(new WorkAsyncInfo("Save Solution Import Log..", ExecuteExportLogRequest) { PostWorkCallBack = ProcessExportLogResponse, AsyncArgument = importJobId });
+                WorkAsync(new WorkAsyncInfo("Save Solution Import Log..", ExecuteExportLogRequest)
+                {
+                    PostWorkCallBack = ProcessExportLogResponse, 
+                    AsyncArgument = importJobId
+                });
             }
         }
 
@@ -330,5 +370,64 @@ namespace Ryr.SolutionHistory
         {
             ExecuteMethod(RetrieveCurrentSolutions);
         }
+    }
+
+    struct SolutionComponent
+    {
+        //public const string SolutionManifests = "solutionManifest";
+        public const string Upgrades = "upgradeHandler";
+        public const string ValidateHandlers = "validateHandler";
+        //public const string Nodes = "node";
+
+        public const string Entities = "entity";
+        public const string Optionsets = "optionSet";
+        //public const string Ribbons = "ribbon";
+        public const string Dashboards = "dashboard";
+        public const string Reports = "report";
+        
+        public const string FieldSecurityProfiles = "FieldSecurityProfile";
+        public const string SecurityRoles = "securityrole";
+        public const string Templates = "template";
+        public const string RoutingRules = "routingrule";
+        public const string Slas = "Sla";
+        public const string Webresources = "webResource";
+        public const string CustomControls = "customControl";
+
+        public const string Workflows = "workflow";
+        public const string Dialogs = "dialog";
+        public const string SolutionPluginAssemblies = "PluginAssembly";
+        public const string SdkMessageProcessingSteps = "SdkMessageProcessingStep";
+    }
+
+    struct ComponentResult
+    {
+        public const string Warnings = "warning";
+        public const string Errors = "error";
+        public const string Failures = "failure";
+    }
+
+    struct SolutionAttribute
+    {
+        public const string Name = "name";
+        public const string LocalizedName = "LocalizedName";
+        public const string LocalizedNames = "LocalizedNames";
+        public const string Id = "id";
+        public const string Result = "result";
+        public const string Description = "description"; 
+    }
+
+    struct SolutionElement
+    {
+        public const string SolutionManifests = "solutionManifests";
+        public const string SolutionManifest = "solutionManifest";
+        public const string UpgradeSolutionPackageInformation = "upgradeSolutionPackageInformation";
+        public const string LocalizedName = "LocalizedName";
+        public const string LocalizedNames = "LocalizedNames";
+        public const string Version = "Version";
+        public const string Managed = "Managed";
+        public const string CurrentVersion = "currentVersion";
+        public const string FileVersion = "fileVersion";
+        public const string Publisher = "Publisher";
+        public const string UniqueName = "UniqueName";
     }
 }
