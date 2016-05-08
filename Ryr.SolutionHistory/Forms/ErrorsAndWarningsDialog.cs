@@ -25,13 +25,13 @@ namespace Ryr.SolutionHistory.Forms
             listView1.Items.Clear();
             foreach (var errorsAndWarning in errorsAndWarnings)
             {
-                if (errorsAndWarning.Attribute("result").Value != "success")
+                if (errorsAndWarning.Attribute(SolutionAttribute.Result).Value != ComponentResult.Success)
                 {
                     listView1.Items.Add(new ListViewItem(new[]
                     {
-                        errorsAndWarning.Attribute("result").Value,
-                        errorsAndWarning.Attribute("errorcode").Value,
-                        errorsAndWarning.Attribute("errortext").Value
+                        errorsAndWarning.Attribute(SolutionAttribute.Result).Value,
+                        errorsAndWarning.Attribute(SolutionAttribute.ErrorCode).Value,
+                        errorsAndWarning.Attribute(SolutionAttribute.ErrorText).Value
                     }));
                 }
             }

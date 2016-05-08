@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -54,6 +55,11 @@ namespace Ryr.SolutionHistory
 
         private void RetrieveSolutionHistory()
         {
+            if (solutionsListBox.SelectedItems.Count == 0)
+            {
+                MessageBox.Show(this, "No solutions selected.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                return;
+            }
             WorkAsync(new WorkAsyncInfo("Loading solution history..", (e) => {
                 var solutionFilter = new StringBuilder();
                 var solutions = new StringBuilder();
@@ -249,7 +255,6 @@ namespace Ryr.SolutionHistory
                     Tag = itemToTrack.Item3
                 };
                 listItem.SubItems.Add(itemToTrack.Item1);
-                listItem.SubItems.Add(itemToTrack.Item2);
                 var importStatuses = itemToTrack.Item3.Where(x => x.Attribute(SolutionAttribute.Result) != null).ToList();
                 if (importStatuses.Any(x => x.Attribute(SolutionAttribute.Result).Value == ComponentResult.Errors ||
                     x.Attribute(SolutionAttribute.Result).Value == ComponentResult.Failures))
@@ -265,8 +270,14 @@ namespace Ryr.SolutionHistory
                 {
                     listItem.ImageIndex = 0;
                 }
+                var messages = string.Join("\n",importStatuses.
+                    Where(x => x.Attribute(SolutionAttribute.ErrorText) != null && 
+                        x.Attribute(SolutionAttribute.ErrorText).Value != string.Empty)
+                    .Select(x => x.Attribute(SolutionAttribute.ErrorText).Value));
+                listItem.SubItems.Add(messages);
                 ListViewDelegates.AddItem(lvSolutionComponentDetail, listItem);
             }
+            lvSolutionComponentDetail.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
 
         private void ParseComponentXml(DoWorkEventArgs args)
@@ -404,6 +415,7 @@ namespace Ryr.SolutionHistory
         public const string Warnings = "warning";
         public const string Errors = "error";
         public const string Failures = "failure";
+        public const string Success = "success";
     }
 
     struct SolutionAttribute
@@ -413,7 +425,9 @@ namespace Ryr.SolutionHistory
         public const string LocalizedNames = "LocalizedNames";
         public const string Id = "id";
         public const string Result = "result";
-        public const string Description = "description"; 
+        public const string Description = "description";
+        public const string ErrorCode = "errorcode";
+        public const string ErrorText = "errortext"; 
     }
 
     struct SolutionElement

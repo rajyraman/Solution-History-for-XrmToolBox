@@ -43,6 +43,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.includeDeletedSolutionsCheckBox = new System.Windows.Forms.CheckBox();
             this.solutionLabel = new System.Windows.Forms.Label();
             this.solutionsListBox = new System.Windows.Forms.ListBox();
             this.toDateTimePicker = new System.Windows.Forms.DateTimePicker();
@@ -53,7 +54,6 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.includeDeletedSolutionsCheckBox = new System.Windows.Forms.CheckBox();
             this.lvSolutionImports = new Ryr.SolutionHistory.Controls.DoubleBufferedListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader15 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -71,7 +71,7 @@
             this.lvSolutionComponentDetail = new Ryr.SolutionHistory.Controls.DoubleBufferedListView();
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tsMain.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -116,7 +116,7 @@
             this.toolStripSeparator3});
             this.tsMain.Location = new System.Drawing.Point(3, 0);
             this.tsMain.Name = "tsMain";
-            this.tsMain.Size = new System.Drawing.Size(843, 39);
+            this.tsMain.Size = new System.Drawing.Size(472, 25);
             this.tsMain.TabIndex = 86;
             this.tsMain.Text = "toolStrip1";
             // 
@@ -127,14 +127,14 @@
             this.tsbCloseThisTab.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbCloseThisTab.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbCloseThisTab.Name = "tsbCloseThisTab";
-            this.tsbCloseThisTab.Size = new System.Drawing.Size(23, 36);
+            this.tsbCloseThisTab.Size = new System.Drawing.Size(23, 22);
             this.tsbCloseThisTab.Text = "Close this tab";
             this.tsbCloseThisTab.Click += new System.EventHandler(this.tsbCloseThisTab_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 39);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // tsbRefreshSolutions
             // 
@@ -142,7 +142,7 @@
             this.tsbRefreshSolutions.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbRefreshSolutions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbRefreshSolutions.Name = "tsbRefreshSolutions";
-            this.tsbRefreshSolutions.Size = new System.Drawing.Size(221, 36);
+            this.tsbRefreshSolutions.Size = new System.Drawing.Size(118, 22);
             this.tsbRefreshSolutions.Text = "Refresh Solutions";
             this.tsbRefreshSolutions.Click += new System.EventHandler(this.tsbRefreshSolutions_Click);
             // 
@@ -152,14 +152,14 @@
             this.tsbSolutionHistory.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbSolutionHistory.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbSolutionHistory.Name = "tsbSolutionHistory";
-            this.tsbSolutionHistory.Size = new System.Drawing.Size(264, 36);
+            this.tsbSolutionHistory.Size = new System.Drawing.Size(141, 22);
             this.tsbSolutionHistory.Text = "Load Solution History";
             this.tsbSolutionHistory.Click += new System.EventHandler(this.tsbSolutionHistory_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 39);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // tsbExportSolutionLog
             // 
@@ -168,7 +168,7 @@
             this.tsbExportSolutionLog.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsbExportSolutionLog.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbExportSolutionLog.Name = "tsbExportSolutionLog";
-            this.tsbExportSolutionLog.Size = new System.Drawing.Size(305, 36);
+            this.tsbExportSolutionLog.Size = new System.Drawing.Size(160, 22);
             this.tsbExportSolutionLog.Text = "Save Solution Import Log";
             this.tsbExportSolutionLog.ToolTipText = "This exports additional details about the currently selected solution row";
             this.tsbExportSolutionLog.Click += new System.EventHandler(this.tsbExportSolutionLog_Click);
@@ -176,7 +176,7 @@
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 39);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripContainer1
             // 
@@ -185,15 +185,13 @@
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainer1);
-            this.toolStripContainer1.ContentPanel.Margin = new System.Windows.Forms.Padding(6);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(2440, 1013);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1220, 675);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.LeftToolStripPanelVisible = false;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
-            this.toolStripContainer1.Margin = new System.Windows.Forms.Padding(6);
             this.toolStripContainer1.Name = "toolStripContainer1";
             this.toolStripContainer1.RightToolStripPanelVisible = false;
-            this.toolStripContainer1.Size = new System.Drawing.Size(2440, 1052);
+            this.toolStripContainer1.Size = new System.Drawing.Size(1220, 700);
             this.toolStripContainer1.TabIndex = 87;
             this.toolStripContainer1.Text = "toolStripContainer1";
             // 
@@ -205,7 +203,6 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(6);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -215,15 +212,16 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(2440, 1013);
-            this.splitContainer1.SplitterDistance = 600;
-            this.splitContainer1.SplitterWidth = 8;
+            this.splitContainer1.Size = new System.Drawing.Size(1220, 675);
+            this.splitContainer1.SplitterDistance = 300;
             this.splitContainer1.TabIndex = 4;
             // 
             // splitContainer3
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.IsSplitterFixed = true;
             this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Margin = new System.Windows.Forms.Padding(2);
             this.splitContainer3.Name = "splitContainer3";
             this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -231,16 +229,19 @@
             // 
             this.splitContainer3.Panel1.AutoScroll = true;
             this.splitContainer3.Panel1.Controls.Add(this.groupBox4);
+            this.splitContainer3.Panel1MinSize = 150;
             // 
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.groupBox1);
-            this.splitContainer3.Size = new System.Drawing.Size(600, 1013);
-            this.splitContainer3.SplitterDistance = 80;
+            this.splitContainer3.Size = new System.Drawing.Size(300, 675);
+            this.splitContainer3.SplitterDistance = 150;
+            this.splitContainer3.SplitterWidth = 2;
             this.splitContainer3.TabIndex = 9;
             // 
             // groupBox4
             // 
+            this.groupBox4.AutoSize = true;
             this.groupBox4.Controls.Add(this.includeDeletedSolutionsCheckBox);
             this.groupBox4.Controls.Add(this.solutionLabel);
             this.groupBox4.Controls.Add(this.solutionsListBox);
@@ -250,46 +251,62 @@
             this.groupBox4.Controls.Add(this.fromLabel);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Location = new System.Drawing.Point(0, 0);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(600, 80);
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox4.Size = new System.Drawing.Size(300, 150);
             this.groupBox4.TabIndex = 5;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Filters";
             // 
+            // includeDeletedSolutionsCheckBox
+            // 
+            this.includeDeletedSolutionsCheckBox.AutoSize = true;
+            this.includeDeletedSolutionsCheckBox.Location = new System.Drawing.Point(76, 127);
+            this.includeDeletedSolutionsCheckBox.Margin = new System.Windows.Forms.Padding(2);
+            this.includeDeletedSolutionsCheckBox.Name = "includeDeletedSolutionsCheckBox";
+            this.includeDeletedSolutionsCheckBox.Size = new System.Drawing.Size(186, 17);
+            this.includeDeletedSolutionsCheckBox.TabIndex = 9;
+            this.includeDeletedSolutionsCheckBox.Text = "Include hidden/deleted solutions?";
+            this.includeDeletedSolutionsCheckBox.UseVisualStyleBackColor = true;
+            // 
             // solutionLabel
             // 
             this.solutionLabel.AutoSize = true;
-            this.solutionLabel.Location = new System.Drawing.Point(15, 126);
+            this.solutionLabel.Location = new System.Drawing.Point(8, 66);
+            this.solutionLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.solutionLabel.Name = "solutionLabel";
-            this.solutionLabel.Size = new System.Drawing.Size(101, 25);
+            this.solutionLabel.Size = new System.Drawing.Size(50, 13);
             this.solutionLabel.TabIndex = 8;
             this.solutionLabel.Text = "Solutions";
             // 
             // solutionsListBox
             // 
             this.solutionsListBox.FormattingEnabled = true;
-            this.solutionsListBox.ItemHeight = 25;
-            this.solutionsListBox.Location = new System.Drawing.Point(153, 126);
+            this.solutionsListBox.Location = new System.Drawing.Point(76, 66);
+            this.solutionsListBox.Margin = new System.Windows.Forms.Padding(2);
             this.solutionsListBox.Name = "solutionsListBox";
             this.solutionsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.solutionsListBox.Size = new System.Drawing.Size(425, 104);
+            this.solutionsListBox.Size = new System.Drawing.Size(214, 56);
             this.solutionsListBox.TabIndex = 7;
             // 
             // toDateTimePicker
             // 
             this.toDateTimePicker.CustomFormat = "dd/MM/yyyy HH:mm";
             this.toDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.toDateTimePicker.Location = new System.Drawing.Point(153, 75);
+            this.toDateTimePicker.Location = new System.Drawing.Point(76, 39);
+            this.toDateTimePicker.Margin = new System.Windows.Forms.Padding(2);
             this.toDateTimePicker.Name = "toDateTimePicker";
-            this.toDateTimePicker.Size = new System.Drawing.Size(425, 31);
+            this.toDateTimePicker.Size = new System.Drawing.Size(214, 20);
             this.toDateTimePicker.TabIndex = 6;
             // 
             // toLabel
             // 
             this.toLabel.AutoSize = true;
-            this.toLabel.Location = new System.Drawing.Point(15, 81);
+            this.toLabel.Location = new System.Drawing.Point(8, 42);
+            this.toLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.toLabel.Name = "toLabel";
-            this.toLabel.Size = new System.Drawing.Size(37, 25);
+            this.toLabel.Size = new System.Drawing.Size(20, 13);
             this.toLabel.TabIndex = 5;
             this.toLabel.Text = "To";
             // 
@@ -297,29 +314,32 @@
             // 
             this.fromDateTimePicker.CustomFormat = "dd/MM/yyyy HH:mm";
             this.fromDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.fromDateTimePicker.Location = new System.Drawing.Point(153, 30);
+            this.fromDateTimePicker.Location = new System.Drawing.Point(76, 16);
+            this.fromDateTimePicker.Margin = new System.Windows.Forms.Padding(2);
             this.fromDateTimePicker.Name = "fromDateTimePicker";
-            this.fromDateTimePicker.Size = new System.Drawing.Size(425, 31);
+            this.fromDateTimePicker.Size = new System.Drawing.Size(214, 20);
             this.fromDateTimePicker.TabIndex = 3;
             // 
             // fromLabel
             // 
             this.fromLabel.AutoSize = true;
-            this.fromLabel.Location = new System.Drawing.Point(15, 36);
+            this.fromLabel.Location = new System.Drawing.Point(8, 19);
+            this.fromLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.fromLabel.Name = "fromLabel";
-            this.fromLabel.Size = new System.Drawing.Size(61, 25);
+            this.fromLabel.Size = new System.Drawing.Size(30, 13);
             this.fromLabel.TabIndex = 4;
             this.fromLabel.Text = "From";
             // 
             // groupBox1
             // 
+            this.groupBox1.AutoSize = true;
             this.groupBox1.Controls.Add(this.lvSolutionImports);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(600, 945);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox1.Size = new System.Drawing.Size(300, 523);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Solution Imports";
@@ -328,20 +348,19 @@
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Margin = new System.Windows.Forms.Padding(6);
             this.splitContainer2.Name = "splitContainer2";
             // 
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.groupBox2);
+            this.splitContainer2.Panel1MinSize = 40;
             // 
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.groupBox3);
             this.splitContainer2.Panel2MinSize = 400;
-            this.splitContainer2.Size = new System.Drawing.Size(1832, 1013);
-            this.splitContainer2.SplitterDistance = 300;
-            this.splitContainer2.SplitterWidth = 8;
+            this.splitContainer2.Size = new System.Drawing.Size(916, 675);
+            this.splitContainer2.SplitterDistance = 243;
             this.splitContainer2.TabIndex = 0;
             // 
             // groupBox2
@@ -349,36 +368,27 @@
             this.groupBox2.Controls.Add(this.lvSolutionComponents);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(0, 0);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox2.Size = new System.Drawing.Size(300, 1013);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox2.Size = new System.Drawing.Size(243, 675);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Solution Components";
             // 
             // groupBox3
             // 
+            this.groupBox3.AutoSize = true;
             this.groupBox3.Controls.Add(this.lvSolutionComponentDetail);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(0, 0);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox3.Size = new System.Drawing.Size(1524, 1013);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox3.Size = new System.Drawing.Size(669, 675);
             this.groupBox3.TabIndex = 4;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Component Detail";
-            // 
-            // includeDeletedSolutionsCheckBox
-            // 
-            this.includeDeletedSolutionsCheckBox.AutoSize = true;
-            this.includeDeletedSolutionsCheckBox.Location = new System.Drawing.Point(153, 245);
-            this.includeDeletedSolutionsCheckBox.Name = "includeDeletedSolutionsCheckBox";
-            this.includeDeletedSolutionsCheckBox.Size = new System.Drawing.Size(365, 29);
-            this.includeDeletedSolutionsCheckBox.TabIndex = 9;
-            this.includeDeletedSolutionsCheckBox.Text = "Include hidden/deleted solutions?";
-            this.includeDeletedSolutionsCheckBox.UseVisualStyleBackColor = true;
             // 
             // lvSolutionImports
             // 
@@ -397,11 +407,11 @@
             this.lvSolutionImports.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSolutionImports.FullRowSelect = true;
             this.lvSolutionImports.HideSelection = false;
-            this.lvSolutionImports.Location = new System.Drawing.Point(4, 28);
-            this.lvSolutionImports.Margin = new System.Windows.Forms.Padding(4);
+            this.lvSolutionImports.Location = new System.Drawing.Point(2, 15);
+            this.lvSolutionImports.Margin = new System.Windows.Forms.Padding(2);
             this.lvSolutionImports.MultiSelect = false;
             this.lvSolutionImports.Name = "lvSolutionImports";
-            this.lvSolutionImports.Size = new System.Drawing.Size(592, 913);
+            this.lvSolutionImports.Size = new System.Drawing.Size(296, 506);
             this.lvSolutionImports.TabIndex = 0;
             this.lvSolutionImports.UseCompatibleStateImageBehavior = false;
             this.lvSolutionImports.View = System.Windows.Forms.View.Details;
@@ -465,11 +475,11 @@
             this.lvSolutionComponents.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSolutionComponents.FullRowSelect = true;
             this.lvSolutionComponents.HideSelection = false;
-            this.lvSolutionComponents.Location = new System.Drawing.Point(4, 28);
-            this.lvSolutionComponents.Margin = new System.Windows.Forms.Padding(4);
+            this.lvSolutionComponents.Location = new System.Drawing.Point(2, 15);
+            this.lvSolutionComponents.Margin = new System.Windows.Forms.Padding(2);
             this.lvSolutionComponents.MultiSelect = false;
             this.lvSolutionComponents.Name = "lvSolutionComponents";
-            this.lvSolutionComponents.Size = new System.Drawing.Size(292, 981);
+            this.lvSolutionComponents.Size = new System.Drawing.Size(239, 658);
             this.lvSolutionComponents.TabIndex = 0;
             this.lvSolutionComponents.UseCompatibleStateImageBehavior = false;
             this.lvSolutionComponents.View = System.Windows.Forms.View.Details;
@@ -490,15 +500,16 @@
             this.lvSolutionComponentDetail.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader8,
             this.columnHeader6,
-            this.columnHeader7});
+            this.columnHeader16});
             this.lvSolutionComponentDetail.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSolutionComponentDetail.FullRowSelect = true;
             this.lvSolutionComponentDetail.HideSelection = false;
-            this.lvSolutionComponentDetail.Location = new System.Drawing.Point(4, 28);
-            this.lvSolutionComponentDetail.Margin = new System.Windows.Forms.Padding(4);
+            this.lvSolutionComponentDetail.Location = new System.Drawing.Point(2, 15);
+            this.lvSolutionComponentDetail.Margin = new System.Windows.Forms.Padding(2);
             this.lvSolutionComponentDetail.MultiSelect = false;
             this.lvSolutionComponentDetail.Name = "lvSolutionComponentDetail";
-            this.lvSolutionComponentDetail.Size = new System.Drawing.Size(1516, 981);
+            this.lvSolutionComponentDetail.ShowItemToolTips = true;
+            this.lvSolutionComponentDetail.Size = new System.Drawing.Size(665, 658);
             this.lvSolutionComponentDetail.SmallImageList = this.imageList1;
             this.lvSolutionComponentDetail.TabIndex = 0;
             this.lvSolutionComponentDetail.UseCompatibleStateImageBehavior = false;
@@ -512,22 +523,21 @@
             // 
             // columnHeader6
             // 
-            this.columnHeader6.Text = "Display Name";
+            this.columnHeader6.Text = "Component Name";
             this.columnHeader6.Width = 208;
             // 
-            // columnHeader7
+            // columnHeader16
             // 
-            this.columnHeader7.Text = "Id";
-            this.columnHeader7.Width = 206;
+            this.columnHeader16.Text = "Message";
             // 
             // SolutionHistory
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.toolStripContainer1);
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SolutionHistory";
-            this.Size = new System.Drawing.Size(2440, 1052);
+            this.Size = new System.Drawing.Size(1220, 700);
             this.Load += new System.EventHandler(this.SolutionHistory_Load);
             this.tsMain.ResumeLayout(false);
             this.tsMain.PerformLayout();
@@ -541,7 +551,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
+            this.splitContainer3.Panel1.PerformLayout();
             this.splitContainer3.Panel2.ResumeLayout(false);
+            this.splitContainer3.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
@@ -549,6 +561,7 @@
             this.groupBox1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
@@ -589,7 +602,6 @@
         private Controls.DoubleBufferedListView lvSolutionComponentDetail;
         private System.Windows.Forms.ColumnHeader columnHeader8;
         private System.Windows.Forms.ColumnHeader columnHeader6;
-        private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label solutionLabel;
         private System.Windows.Forms.ListBox solutionsListBox;
@@ -601,5 +613,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader15;
         private System.Windows.Forms.ToolStripButton tsbRefreshSolutions;
         private System.Windows.Forms.CheckBox includeDeletedSolutionsCheckBox;
+        private System.Windows.Forms.ColumnHeader columnHeader16;
     }
 }
