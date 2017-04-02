@@ -5,7 +5,7 @@ This is a tool for XRMToolBox. The purpose of the tool is to view a historical l
 # Install Instructions
 Download the most recent version of XrmToolBox. Click on the "Plugin Store" button in the menu and install this tool from the store.
 
-[image:SolutionHistory.png]
+![Screenshot](SolutionHistory.png "Screenshot")
 
 # Code that I didn't write
 CommonDelegates, ListViewItemComparer and ListViewDelegates have been taken from ViewLayout Replicator tool. Credits to tanguy.
