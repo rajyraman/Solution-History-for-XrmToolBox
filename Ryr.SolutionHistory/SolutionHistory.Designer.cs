@@ -72,6 +72,8 @@
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader17 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader18 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tsMain.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -499,7 +501,9 @@
             // 
             this.lvSolutionComponentDetail.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader8,
+            this.columnHeader17,
             this.columnHeader6,
+            this.columnHeader18,
             this.columnHeader16});
             this.lvSolutionComponentDetail.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSolutionComponentDetail.FullRowSelect = true;
@@ -515,16 +519,24 @@
             this.lvSolutionComponentDetail.UseCompatibleStateImageBehavior = false;
             this.lvSolutionComponentDetail.View = System.Windows.Forms.View.Details;
             this.lvSolutionComponentDetail.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvSolutionComponentDetail_ColumnClick);
-            this.lvSolutionComponentDetail.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvSolutionComponentDetail_MouseDoubleClick);
             // 
             // columnHeader8
             // 
             this.columnHeader8.Text = "     ";
             // 
+            // columnHeader17
+            // 
+            this.columnHeader17.Text = "Date";
+            this.columnHeader17.Width = 200;
+            // 
             // columnHeader6
             // 
             this.columnHeader6.Text = "Component Name";
             this.columnHeader6.Width = 208;
+            // columnHeader18
+            // 
+            this.columnHeader18.Text = "Description";
+            this.columnHeader18.Width = 200;
             // 
             // columnHeader16
             // 
@@ -614,5 +626,7 @@
         private System.Windows.Forms.ToolStripButton tsbRefreshSolutions;
         private System.Windows.Forms.CheckBox includeDeletedSolutionsCheckBox;
         private System.Windows.Forms.ColumnHeader columnHeader16;
+        private System.Windows.Forms.ColumnHeader columnHeader17;
+        private System.Windows.Forms.ColumnHeader columnHeader18;
     }
 }

@@ -17,6 +17,8 @@ using Tanguy.WinForm.Utilities.DelegatesHelpers;
 using XrmToolBox.Extensibility;
 using XrmToolBox.Extensibility.Interfaces;
 using System.ComponentModel.Composition;
+using System.Globalization;
+using System.Windows.Documents;
 
 namespace Ryr.SolutionHistory
 {
@@ -96,9 +98,9 @@ namespace Ryr.SolutionHistory
                         </fetch>", solutionFilter.ToString(),
                              fromDateTimePicker.Value.ToString("s"),
                              toDateTimePicker.Value.ToString("s"),
-                             includeDeletedSolutionsCheckBox.Checked ?
-                             string.Format(@"<condition attribute=""solutionname"" operator=""not-in"" >{0}</condition>", solutions)
-                             : "");
+                             includeDeletedSolutionsCheckBox.Checked ? 
+                                $@"<condition attribute=""solutionname"" operator=""not-in"" >{solutions}</condition>"
+                                 : "");
                 e.Result = Service.RetrieveMultiple(new FetchExpression(importJobsFetchXml)).Entities;
             }) { PostWorkCallBack = (completedargs) => {
 
@@ -124,7 +126,7 @@ namespace Ryr.SolutionHistory
                         solutionManifest
                             .Elements(SolutionElement.LocalizedNames)
                             .Elements(SolutionElement.LocalizedName)
-                            .Attributes(SolutionAttribute.Description)
+                            .Attributes(SolutionComponent.Description)
                             .Select(att => att.Value)
                             .FirstOrDefault() ?? importJob.GetAttributeValue<string>("solutionname");
 
@@ -140,7 +142,7 @@ namespace Ryr.SolutionHistory
                         .Elements(SolutionElement.Publisher)
                         .Elements(SolutionElement.LocalizedNames)
                         .Elements(SolutionElement.LocalizedName)
-                        .Attributes(SolutionAttribute.Description)
+                        .Attributes(SolutionComponent.Description)
                         .Select(att => att.Value).FirstOrDefault() ?? 
                         solutionManifest
                         .Elements(SolutionElement.Publisher)
@@ -187,32 +189,39 @@ namespace Ryr.SolutionHistory
 
         private void LoadParsedSolutionXmlToGrid(RunWorkerCompletedEventArgs args)
         {
-            var itemsToTrack = (List<Tuple<string, IEnumerable<XElement>>>)args.Result;
+            var itemsToTrack = (IEnumerable<ImportResult>)args.Result;
+            var importResults = itemsToTrack as IList<ImportResult> ?? itemsToTrack.ToList();
+            var groupNodes = importResults
+                .GroupBy(e => e.Name)
+                .Select(x => new
+                {
+                    Key = x.Key.ToString().ToLower(),
+                    Count = x.Count(),
+                    State = x.Any(y => y.Result == ComponentResult.Failure) ?
+                        ComponentResult.Failure : x.Any(y => y.Result == ComponentResult.Error) ?
+                            ComponentResult.Error : x.Any(y => y.Result == ComponentResult.Warning) ?
+                                ComponentResult.Warning : ComponentResult.Success
+                });
             ListViewDelegates.ClearItems(lvSolutionComponents);
-            foreach (var itemToTrack in itemsToTrack)
+            foreach (var groupNode in groupNodes)
             {
-                var listItem = new ListViewItem { Text = itemToTrack.Item1, Tag = itemToTrack.Item2 };
-                var resultNodes = itemToTrack.Item2.Descendants(SolutionAttribute.Result).ToList();
-                if (resultNodes.Any(x => x.Attribute(SolutionAttribute.Result) != null &&
-                    (x.Attribute(SolutionAttribute.Result).Value.Equals(ComponentResult.Failures, StringComparison.InvariantCultureIgnoreCase) ||
-                    x.Attribute(SolutionAttribute.Result).Value.Equals(ComponentResult.Errors, StringComparison.InvariantCultureIgnoreCase))))
+                var listItem = new ListViewItem
                 {
-                    listItem.ForeColor = Color.Red;
-                }
-                if (resultNodes.Any(x => x.Attribute(SolutionAttribute.Result) != null &&
-                    x.Attribute(SolutionAttribute.Result).Value.Equals(ComponentResult.Warnings, StringComparison.InvariantCultureIgnoreCase)))
+                    Text = groupNode.Key,
+                    Tag = importResults.Where(x=>x.Name.Equals(groupNode.Key, StringComparison.CurrentCultureIgnoreCase)).ToList()
+                };
+                switch (groupNode.State)
                 {
-                    listItem.ForeColor = Color.Orange;
+                    case ComponentResult.Failure:
+                    case ComponentResult.Error:
+                        listItem.ForeColor = Color.Red;
+                        break;
+                    case ComponentResult.Warning:
+                        listItem.ForeColor = Color.Orange;
+                        break;
                 }
-                if (!itemToTrack.Item2.Any())
-                {
-                    ListViewDelegates.RemoveItem(lvSolutionComponents, listItem);
-                }
-                else
-                {
-                    listItem.SubItems.Add(itemToTrack.Item2.Count().ToString());
-                    ListViewDelegates.AddItem(lvSolutionComponents, listItem);
-                }
+                listItem.SubItems.Add(groupNode.Count.ToString());
+                ListViewDelegates.AddItem(lvSolutionComponents, listItem);
             }
             lvSolutionComponents.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
@@ -222,96 +231,58 @@ namespace Ryr.SolutionHistory
             ListViewDelegates.ClearItems(lvSolutionComponents);
             ListViewDelegates.ClearItems(lvSolutionComponentDetail);
             var parsedSolutionXml = XElement.Parse(args.Argument.ToString());
-            var itemsToTrack = new List<Tuple<string, IEnumerable<XElement>>>();
-            foreach (var field in typeof(SolutionComponent).GetFields())
-            {
-                itemsToTrack.Add(new Tuple<string, IEnumerable<XElement>>(field.Name,
-                    parsedSolutionXml.Descendants(field.GetValue(null).ToString())));
-            } 		
-            args.Result = itemsToTrack;
+            var solutionElements = parsedSolutionXml.Descendants("result").ToList().Select(x => {
+                var a = x.Ancestors().First();
+                return new ImportResult
+                {
+                    Name = a.Name.ToString(),
+                    Id = x.Attribute(SolutionComponent.Id)?.Value,
+                    LocalizedName = a.Attribute(SolutionComponent.LocalizedName)?.Value,
+                    Description = a.Attribute(SolutionComponent.Description)?.Value,
+                    Processed = a.Attribute(SolutionComponent.Processed)?.Value,
+                    Result = x.Attribute(SolutionComponent.Result)?.Value,
+                    ErrorCode = x.Attribute(SolutionComponent.ErrorCode)?.Value,
+                    ErrorText = x.Attribute(SolutionComponent.ErrorText)?.Value,
+                    DateTimeTicks = new DateTime(Convert.ToInt64(x.Attribute(SolutionComponent.DateTimeTicks)?.Value), DateTimeKind.Utc)
+                                    .ToLocalTime().ToString()
+                };
+            });	
+            args.Result = solutionElements;
         }
 
         private void lvSolutionComponents_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (lvSolutionComponents.SelectedItems.Count > 0)
-            {
-                WorkAsync(new WorkAsyncInfo("Parsing component XML...", ParseComponentXml)
-                {
-                    PostWorkCallBack = LoadParsedComponentXmlToGrid, 
-                    AsyncArgument = lvSolutionComponents.SelectedItems[0].Tag
-                });
-            }
-        }
+            ListViewDelegates.ClearItems(lvSolutionComponentDetail);;
+            if (lvSolutionComponents.SelectedItems.Count == 0) return;
 
-        private void LoadParsedComponentXmlToGrid(RunWorkerCompletedEventArgs args)
-        {
-            var itemsToTrack = (List<Tuple<string, string, IEnumerable<XElement>>>)args.Result;
-            ListViewDelegates.ClearItems(lvSolutionComponentDetail);
+            var itemsToTrack = (List<ImportResult>)lvSolutionComponents.SelectedItems[0].Tag;
             foreach (var itemToTrack in itemsToTrack)
             {
                 var listItem = new ListViewItem
                 {
-                    Text = string.Empty, 
-                    Tag = itemToTrack.Item3
+                    Text = string.Empty,
+                    Tag = itemToTrack.Id
                 };
-                listItem.SubItems.Add(itemToTrack.Item1);
-                var importStatuses = itemToTrack.Item3.Where(x => x.Attribute(SolutionAttribute.Result) != null).ToList();
-                if (importStatuses.Any(x => x.Attribute(SolutionAttribute.Result).Value == ComponentResult.Errors ||
-                    x.Attribute(SolutionAttribute.Result).Value == ComponentResult.Failures))
+                listItem.SubItems.Add(itemToTrack.DateTimeTicks);
+                listItem.SubItems.Add(string.IsNullOrEmpty(itemToTrack.LocalizedName) ? itemToTrack.Id : itemToTrack.LocalizedName);
+                listItem.SubItems.Add(itemToTrack.Description);
+                switch (itemToTrack.Result)
                 {
-                    listItem.ImageIndex = 1;
+                    case ComponentResult.Error:
+                    case ComponentResult.Failure:
+                        listItem.ImageIndex = 1;
+                        break;
+                    case ComponentResult.Warning:
+                        listItem.ImageIndex = 2;
+                        break;
+                    default:
+                        listItem.ImageIndex = 0;
+                        break;
                 }
-                else
-                if (importStatuses.Any(x => x.Attribute(SolutionAttribute.Result).Value == ComponentResult.Warnings))
-                {
-                    listItem.ImageIndex = 2;
-                }
-                else
-                {
-                    listItem.ImageIndex = 0;
-                }
-                var messages = string.Join("\n",importStatuses.
-                    Where(x => x.Attribute(SolutionAttribute.ErrorText) != null && 
-                        x.Attribute(SolutionAttribute.ErrorText).Value != string.Empty)
-                    .Select(x => x.Attribute(SolutionAttribute.ErrorText).Value));
-                listItem.SubItems.Add(messages);
+                listItem.SubItems.Add(itemToTrack.ErrorText);
                 ListViewDelegates.AddItem(lvSolutionComponentDetail, listItem);
             }
             lvSolutionComponentDetail.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-        }
-
-        private void ParseComponentXml(DoWorkEventArgs args)
-        {
-            ListViewDelegates.ClearItems(lvSolutionComponentDetail);
-            var parsedComponentXml = (IEnumerable<XElement>)args.Argument;
-            var itemsToTrack = new List<Tuple<string, string, IEnumerable<XElement>>>();
-            foreach (var xElement in parsedComponentXml)
-            {
-                var componentName = xElement.Attribute(SolutionAttribute.LocalizedName) ??
-                                    xElement.Attribute(SolutionAttribute.Name);
-                itemsToTrack.Add(new Tuple<string, string, IEnumerable<XElement>>(
-                    componentName != null ? componentName.Value : string.Empty,
-                    xElement.Attribute(SolutionAttribute.Id) != null ? xElement.Attribute(SolutionAttribute.Id).Value : string.Empty, 
-                    xElement.Elements(SolutionAttribute.Result)));
-            }
-            args.Result = itemsToTrack;
-        }
-
-        private void lvSolutionComponentDetail_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (lvSolutionComponentDetail.SelectedItems.Count == 0)
-                return;
-
-            ListViewItem item = lvSolutionComponentDetail.SelectedItems[0];
-            var errorsAndWarnings = (IEnumerable<XElement>)item.Tag;
-            if (!errorsAndWarnings.Any(x => x.Attribute(SolutionAttribute.Result).Value == ComponentResult.Warnings ||
-                x.Attribute(SolutionAttribute.Result).Value == ComponentResult.Errors || 
-                x.Attribute(SolutionAttribute.Result).Value == ComponentResult.Failures))
-            {
-                return;
-            }
-            var dialog = new ErrorsAndWarningsDialog(errorsAndWarnings);
-            dialog.ShowDialog(this);
         }
 
         private void tsbExportSolutionLog_Click(object sender, EventArgs e)
@@ -336,9 +307,8 @@ namespace Ryr.SolutionHistory
             var dialog = new SaveFileDialog
             {
                 Filter = "Excel XML Spreadsheet (*.xml)|*.xml",
-                FileName = string.Format("{0}-{1}.xml",
-                    lvSolutionImports.SelectedItems[0].SubItems[2].Text,
-                    DateTime.Parse(lvSolutionImports.SelectedItems[0].SubItems[0].Text).ToString("yyyyMMdd"))
+                FileName =
+                    $"{lvSolutionImports.SelectedItems[0].SubItems[2].Text}-{DateTime.Parse(lvSolutionImports.SelectedItems[0].SubItems[0].Text).ToString("yyyyMMdd")}.xml"
             };
             if (dialog.ShowDialog() == DialogResult.OK)
             {
@@ -383,51 +353,26 @@ namespace Ryr.SolutionHistory
         }
     }
 
-    struct SolutionComponent
-    {
-        //public const string SolutionManifests = "solutionManifest";
-        public const string Upgrades = "upgradeHandler";
-        public const string ValidateHandlers = "validateHandler";
-        //public const string Nodes = "node";
-
-        public const string Entities = "entity";
-        public const string Optionsets = "optionSet";
-        //public const string Ribbons = "ribbon";
-        public const string Dashboards = "dashboard";
-        public const string Reports = "report";
-        
-        public const string FieldSecurityProfiles = "FieldSecurityProfile";
-        public const string SecurityRoles = "securityrole";
-        public const string Templates = "template";
-        public const string RoutingRules = "routingrule";
-        public const string Slas = "Sla";
-        public const string Webresources = "webResource";
-        public const string CustomControls = "customControl";
-
-        public const string Workflows = "workflow";
-        public const string Dialogs = "dialog";
-        public const string SolutionPluginAssemblies = "PluginAssembly";
-        public const string SdkMessageProcessingSteps = "SdkMessageProcessingStep";
-    }
-
     struct ComponentResult
     {
-        public const string Warnings = "warning";
-        public const string Errors = "error";
-        public const string Failures = "failure";
+        public const string Warning = "warning";
+        public const string Error = "error";
+        public const string Failure = "failure";
         public const string Success = "success";
     }
 
-    struct SolutionAttribute
+    struct SolutionComponent
     {
         public const string Name = "name";
         public const string LocalizedName = "LocalizedName";
         public const string LocalizedNames = "LocalizedNames";
         public const string Id = "id";
         public const string Result = "result";
-        public const string Description = "description";
+        public const string Description = "Description";
         public const string ErrorCode = "errorcode";
-        public const string ErrorText = "errortext"; 
+        public const string ErrorText = "errortext";
+        public const string Processed = "processed";
+        public const string DateTimeTicks = "datetimeticks";
     }
 
     struct SolutionElement
@@ -443,5 +388,18 @@ namespace Ryr.SolutionHistory
         public const string FileVersion = "fileVersion";
         public const string Publisher = "Publisher";
         public const string UniqueName = "UniqueName";
+    }
+
+    class ImportResult
+    {
+        public string Name { get; set; }
+        public string Id { get; set; }
+        public string LocalizedName { get; set; }
+        public string Description { get; set; }
+        public string Processed { get; set; }
+        public string Result { get; set; }
+        public string ErrorCode { get; set; }
+        public string ErrorText { get; set; }
+        public string DateTimeTicks { get; set; }
     }
 }
