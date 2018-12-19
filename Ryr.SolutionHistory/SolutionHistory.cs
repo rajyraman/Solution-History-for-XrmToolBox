@@ -1,29 +1,27 @@
-﻿using System;
-using System.Collections;
+﻿using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-using Ryr.SolutionHistory.Forms;
 using Tanguy.WinForm.Utilities.DelegatesHelpers;
 using XrmToolBox.Extensibility;
 using XrmToolBox.Extensibility.Interfaces;
-using System.ComponentModel.Composition;
-using System.Globalization;
-using System.Windows.Documents;
 
 namespace Ryr.SolutionHistory
 {
-    public partial class SolutionHistory : PluginControlBase
+    public partial class SolutionHistory : PluginControlBase, IGitHubPlugin
     {
+        public string RepositoryName => "Solution-History-for-XrmToolBox";
+
+        public string UserName => "rajyraman";
+
         public SolutionHistory()
         {
             InitializeComponent();
