@@ -221,7 +221,6 @@
             // splitContainer3
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.IsSplitterFixed = true;
             this.splitContainer3.Location = new System.Drawing.Point(0, 0);
             this.splitContainer3.Margin = new System.Windows.Forms.Padding(2);
             this.splitContainer3.Name = "splitContainer3";
@@ -237,7 +236,7 @@
             // 
             this.splitContainer3.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer3.Size = new System.Drawing.Size(300, 675);
-            this.splitContainer3.SplitterDistance = 150;
+            this.splitContainer3.SplitterDistance = 167;
             this.splitContainer3.SplitterWidth = 2;
             this.splitContainer3.TabIndex = 9;
             // 
@@ -256,15 +255,16 @@
             this.groupBox4.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox4.Size = new System.Drawing.Size(300, 150);
+            this.groupBox4.Size = new System.Drawing.Size(300, 167);
             this.groupBox4.TabIndex = 5;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Filters";
             // 
             // includeDeletedSolutionsCheckBox
             // 
+            this.includeDeletedSolutionsCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.includeDeletedSolutionsCheckBox.AutoSize = true;
-            this.includeDeletedSolutionsCheckBox.Location = new System.Drawing.Point(76, 127);
+            this.includeDeletedSolutionsCheckBox.Location = new System.Drawing.Point(76, 141);
             this.includeDeletedSolutionsCheckBox.Margin = new System.Windows.Forms.Padding(2);
             this.includeDeletedSolutionsCheckBox.Name = "includeDeletedSolutionsCheckBox";
             this.includeDeletedSolutionsCheckBox.Size = new System.Drawing.Size(186, 17);
@@ -284,12 +284,15 @@
             // 
             // solutionsListBox
             // 
+            this.solutionsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.solutionsListBox.FormattingEnabled = true;
             this.solutionsListBox.Location = new System.Drawing.Point(76, 66);
             this.solutionsListBox.Margin = new System.Windows.Forms.Padding(2);
             this.solutionsListBox.Name = "solutionsListBox";
             this.solutionsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.solutionsListBox.Size = new System.Drawing.Size(214, 56);
+            this.solutionsListBox.Size = new System.Drawing.Size(214, 69);
             this.solutionsListBox.TabIndex = 7;
             // 
             // toDateTimePicker
@@ -299,7 +302,7 @@
             this.toDateTimePicker.Location = new System.Drawing.Point(76, 39);
             this.toDateTimePicker.Margin = new System.Windows.Forms.Padding(2);
             this.toDateTimePicker.Name = "toDateTimePicker";
-            this.toDateTimePicker.Size = new System.Drawing.Size(214, 20);
+            this.toDateTimePicker.Size = new System.Drawing.Size(153, 20);
             this.toDateTimePicker.TabIndex = 6;
             // 
             // toLabel
@@ -319,7 +322,7 @@
             this.fromDateTimePicker.Location = new System.Drawing.Point(76, 16);
             this.fromDateTimePicker.Margin = new System.Windows.Forms.Padding(2);
             this.fromDateTimePicker.Name = "fromDateTimePicker";
-            this.fromDateTimePicker.Size = new System.Drawing.Size(214, 20);
+            this.fromDateTimePicker.Size = new System.Drawing.Size(153, 20);
             this.fromDateTimePicker.TabIndex = 3;
             // 
             // fromLabel
@@ -341,7 +344,7 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(300, 523);
+            this.groupBox1.Size = new System.Drawing.Size(300, 506);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Solution Imports";
@@ -413,7 +416,7 @@
             this.lvSolutionImports.Margin = new System.Windows.Forms.Padding(2);
             this.lvSolutionImports.MultiSelect = false;
             this.lvSolutionImports.Name = "lvSolutionImports";
-            this.lvSolutionImports.Size = new System.Drawing.Size(296, 506);
+            this.lvSolutionImports.Size = new System.Drawing.Size(296, 489);
             this.lvSolutionImports.TabIndex = 0;
             this.lvSolutionImports.UseCompatibleStateImageBehavior = false;
             this.lvSolutionImports.View = System.Windows.Forms.View.Details;
@@ -533,6 +536,7 @@
             // 
             this.columnHeader6.Text = "Component Name";
             this.columnHeader6.Width = 208;
+            // 
             // columnHeader18
             // 
             this.columnHeader18.Text = "Description";
