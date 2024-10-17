@@ -60,6 +60,7 @@
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader14 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader9 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader11 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -70,10 +71,10 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvSolutionComponentDetail = new Ryr.SolutionHistory.Controls.DoubleBufferedListView();
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader17 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader18 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader16 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tsMain.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -289,7 +290,7 @@
             this.solutionsListBox.Margin = new System.Windows.Forms.Padding(2);
             this.solutionsListBox.Name = "solutionsListBox";
             this.solutionsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.solutionsListBox.Size = new System.Drawing.Size(214, 56);
+            this.solutionsListBox.Size = new System.Drawing.Size(300, 56);
             this.solutionsListBox.TabIndex = 7;
             // 
             // toDateTimePicker
@@ -299,7 +300,7 @@
             this.toDateTimePicker.Location = new System.Drawing.Point(76, 39);
             this.toDateTimePicker.Margin = new System.Windows.Forms.Padding(2);
             this.toDateTimePicker.Name = "toDateTimePicker";
-            this.toDateTimePicker.Size = new System.Drawing.Size(214, 20);
+            this.toDateTimePicker.Size = new System.Drawing.Size(300, 20);
             this.toDateTimePicker.TabIndex = 6;
             // 
             // toLabel
@@ -319,7 +320,7 @@
             this.fromDateTimePicker.Location = new System.Drawing.Point(76, 16);
             this.fromDateTimePicker.Margin = new System.Windows.Forms.Padding(2);
             this.fromDateTimePicker.Name = "fromDateTimePicker";
-            this.fromDateTimePicker.Size = new System.Drawing.Size(214, 20);
+            this.fromDateTimePicker.Size = new System.Drawing.Size(300, 20);
             this.fromDateTimePicker.TabIndex = 3;
             // 
             // fromLabel
@@ -401,6 +402,7 @@
             this.columnHeader2,
             this.columnHeader14,
             this.columnHeader3,
+            this.columnHeader7,
             this.columnHeader9,
             this.columnHeader10,
             this.columnHeader11,
@@ -444,6 +446,10 @@
             // 
             this.columnHeader3.Text = "Type";
             this.columnHeader3.Width = 201;
+            // columnHeader7
+            // 
+            this.columnHeader7.Text = "SmartDiff";
+            this.columnHeader7.Width = 100;
             // 
             // columnHeader9
             // 
@@ -600,6 +606,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader14;
         private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.ColumnHeader columnHeader10;
         private System.Windows.Forms.ColumnHeader columnHeader11;

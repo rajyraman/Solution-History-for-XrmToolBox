@@ -117,6 +117,7 @@ namespace Ryr.SolutionHistory
                     };
                     listItem.SubItems.Add(importJob.GetAttributeValue<DateTime>("completedon").ToLocalTime().ToString("dd-MMM-yyyy HH:mm"));
                     var parsedComponentXml = XElement.Parse(solutionXml);
+                    var isSmartDiffApplied = bool.Parse(parsedComponentXml.Element("SmartDiffApplied")?.Value ?? "false") ? "✔" : "";
                     var solutionManifest = parsedComponentXml
                         .Elements(SolutionElement.SolutionManifests)
                         .Elements(SolutionElement.SolutionManifest).ToList();
@@ -135,6 +136,7 @@ namespace Ryr.SolutionHistory
                     listItem.SubItems.Add((solutionManifest.Elements(SolutionElement.Managed).Select(cv => cv.Value).FirstOrDefault() ?? string.Empty) == "0"
                         ? "Unmanaged"
                         : "Managed");
+                    listItem.SubItems.Add(isSmartDiffApplied);
                     listItem.SubItems.Add(importJob.GetAttributeValue<EntityReference>("createdby").Name);
                     listItem.SubItems.Add(upgradeInformation.Elements(SolutionElement.CurrentVersion).Select(cv => cv.Value).FirstOrDefault() ?? string.Empty);
                     listItem.SubItems.Add(upgradeInformation.Elements(SolutionElement.FileVersion).Select(fv => fv.Value).FirstOrDefault() ?? string.Empty);
@@ -313,7 +315,7 @@ namespace Ryr.SolutionHistory
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 File.WriteAllText(dialog.FileName, args.Result.ToString());
-                MessageBox.Show(this, "Successfully saved the import log file. Open using Excel.",
+                MessageBox.Show(this, "Successfully saved the import log file. Open using Microsoft Excel.",
                     "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
