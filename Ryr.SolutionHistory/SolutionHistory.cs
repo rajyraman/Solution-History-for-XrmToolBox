@@ -19,11 +19,16 @@ using XrmToolBox.Extensibility.Interfaces;
 using System.ComponentModel.Composition;
 using System.Globalization;
 using System.Windows.Documents;
+using System.Diagnostics;
 
 namespace Ryr.SolutionHistory
 {
-    public partial class SolutionHistory : PluginControlBase
+    public partial class SolutionHistory : PluginControlBase, IGitHubPlugin
     {
+        public string RepositoryName => "Solution-History-for-XrmToolBox";
+
+        public string UserName => "rajyraman";
+
         public SolutionHistory()
         {
             InitializeComponent();
@@ -291,7 +296,7 @@ namespace Ryr.SolutionHistory
         {
             if (lvSolutionImports.SelectedItems.Count > 0)
             {
-                var importJobId = new Guid(lvSolutionImports.SelectedItems[0].SubItems[10].Text);
+                var importJobId = new Guid(lvSolutionImports.SelectedItems[0].SubItems[11].Text);
                 WorkAsync(new WorkAsyncInfo("Save Solution Import Log..", ExecuteExportLogRequest)
                 {
                     PostWorkCallBack = ProcessExportLogResponse, 
@@ -310,13 +315,13 @@ namespace Ryr.SolutionHistory
             {
                 Filter = "Excel XML Spreadsheet (*.xml)|*.xml",
                 FileName =
-                    $"{lvSolutionImports.SelectedItems[0].SubItems[2].Text}-{DateTime.Parse(lvSolutionImports.SelectedItems[0].SubItems[0].Text).ToString("yyyyMMdd")}.xml"
+                    $"{lvSolutionImports.SelectedItems[0].SubItems[2].Text}-{DateTime.Parse(lvSolutionImports.SelectedItems[0].SubItems[0].Text):yyyyMMdd}.xml"
             };
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 File.WriteAllText(dialog.FileName, args.Result.ToString());
-                MessageBox.Show(this, "Successfully saved the import log file. Open using Microsoft Excel.",
-                    "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, "Successfully saved the import log file. This XML file can be opened in Microsoft Excel.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Process.Start(dialog.FileName);
             }
         }
 
