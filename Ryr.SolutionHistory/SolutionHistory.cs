@@ -45,6 +45,7 @@ namespace Ryr.SolutionHistory
                         <attribute name=""uniquename"" />
                         <attribute name=""solutionid"" />
                         <attribute name=""isvisible"" />
+                        <order attribute=""uniquename"" />
                         <filter>
                           <condition attribute=""isvisible"" operator=""eq"" value=""1"" />
                         </filter>
